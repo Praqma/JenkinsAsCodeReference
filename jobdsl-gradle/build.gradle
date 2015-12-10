@@ -9,9 +9,10 @@ repositories {
 task buildXml(type: JavaExec) {
     main = 'javaposse.jobdsl.Run'
     classpath = sourceSets.main.runtimeClasspath
-    args "${project.projectDir}/jobs/JobWithJobHelpers.gdsl"
+    args "${project.projectDir}/jobs/dslexampleJobssl"
     workingDir 'xml'
 }
+
 
 dependencies {
     compile "org.codehaus.groovy:groovy-all:2.4.5"
