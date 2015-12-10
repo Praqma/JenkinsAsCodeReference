@@ -1,0 +1,29 @@
+/*****************************************************************************************************************************
+ * Created by alexsedova 2015/12/03
+ *
+ * Job for update Trifork jenkins.
+ * For more information about jobDSL read:
+ * https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL
+ ****************************************************************************************************************************/
+
+import static JobHelpers.addScmBlock
+import static JobHelpers.addDescriptionParam
+import static JobHelpers.addPretestedIntegration
+
+Boolean debug = System.getProperty('DEBUG')
+
+job('pretestedIntegration-jenkinsConfig') {
+    addDescriptionParam(delegate)
+    //Local config for testing
+    addScmBlock(delegate, '', '', '')
+    addPretestedIntegration(delegate)
+    triggers {
+        scm('* * * * *')
+    }
+    steps {
+        gradle {
+            tasks('clean')
+            tasks('buildXml')
+        }
+    }
+}
