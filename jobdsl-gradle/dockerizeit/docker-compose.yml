@@ -1,0 +1,9 @@
+jmaster:
+  build: master/
+  ports:
+   - "8080:8080"
+   - "50000:50000"
+  volumes:
+   - /home/jenkins/.ssh:/var/jenkins_home/.ssh
+   - /home/jenkins/jobs:/var/jenkins_home/jobs
+   - /home/jenkins/jenkins-dsl-gradle:/home/jenkins-dsl-gradle
