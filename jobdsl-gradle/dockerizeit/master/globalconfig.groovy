@@ -56,8 +56,8 @@ def inst = Jenkins.getInstance()
 
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 
-desc.setGlobalConfigName("jenkins")
-desc.setGlobalConfigEmail("stockholm@trifork.com")
+desc.setGlobalConfigName("alexsedova")
+desc.setGlobalConfigEmail("als@praqma.net")
 
 // Set Global Slack configuration
 //def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]

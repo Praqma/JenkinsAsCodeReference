@@ -1,4 +1,4 @@
-docker-compose -p trigrad stop
-docker-compose -p trigrad rm -f
+docker-compose -p project stop
+docker-compose -p project rm -f
 
 

@@ -33,15 +33,15 @@ def project = new FreeStyleProject(Jenkins.instance, jobName)
 project.setAssignedLabel()
 //Get local git for checking modifications:
 // TODO add many branches
-List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec("*/master"))
+List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec("*/docker"))
 List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
 def localRepoPath = '/home/jenkins-dsl-gradle'
 def localRepo = new File(localRepoPath)
 if ( !localRepo.exists() ) {
-  dslGitrepoList.add(new UserRemoteConfig("git@gitlab.trifork.se:trifork/jenkins-dsl-gradle.git",
+  dslGitrepoList.add(new UserRemoteConfig("git@github.com:Praqma/JenkinsAsCodeReference.git",
           "",
           "",
-          'jenkins'))
+          'alexsedova'))
 }
 else {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localRepoPath + '/', "origin", "", null))
@@ -56,12 +56,12 @@ project.setScm(dslGitSCM)
 // def scm = new GitSCM(projectURL) 
 // Add also branch and credentialsId. 
 // Get script execute from checked out git repository:
-def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false", targets="jobs/*.gdsl", scriptText=""),
+def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false", targets="jobdsl-gradle/jobs/*.groovy", scriptText=""),
                                             ignoreExisting=false,
                                             removedJobAction=RemovedJobAction.DELETE,
                                             removedViewAction=RemovedViewAction.DELETE,
                                             lookupStrategy=LookupStrategy.JENKINS_ROOT,
-                                            additionalClasspath='src/main/groovy');
+                                            additionalClasspath='jobdsl-gradle/src/main/groovy');
 
 project.getBuildersList().add(jobDslBuildStep)
 project.addTrigger(new TimerTrigger("@midnight"))

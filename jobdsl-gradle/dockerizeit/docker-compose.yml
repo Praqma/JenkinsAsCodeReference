@@ -4,6 +4,14 @@ jmaster:
    - "8080:8080"
    - "50000:50000"
   volumes:
-   - /home/jenkins/.ssh:/var/jenkins_home/.ssh
-   - /home/jenkins/jobs:/var/jenkins_home/jobs
-   - /home/jenkins/jenkins-dsl-gradle:/home/jenkins-dsl-gradle
+   - /home/trifork/.ssh_jenkins:/var/jenkins_home/.ssh
+   - /home/trifork/jenkins-home-backup-gradle/jobs:/var/jenkins_home/jobs
+jslave:
+  build: slave/
+  volumes:
+   - /home/trifork/.ssh_jenkins:/home/jenkins-slave/.ssh
+   - /etc/ssl/certs:/etc/ssl/certs
+  links:
+   - jmaster
+  external_links:
+   - selenium-hub:selenium  
