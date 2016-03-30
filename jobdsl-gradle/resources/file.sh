@@ -1,1 +1,2 @@
-echo "Hello!"
+#!/usr/bin/env bash
+echo "Hello from file!"

@@ -49,7 +49,7 @@ class JobsHelper {
        * @param path    Path to the shell script file
        * @param debug   debug mode
        */
-   /* public static Job addShellScriptStep(Job job, String path, boolean debug=false) {
+    public static Job addShellScriptStep(Job job, String path, boolean debug=false) {
         if (debug == true) {
             // TODO: set something for the debug mode
             println 'Debug is set to true'
@@ -58,7 +58,7 @@ class JobsHelper {
             shell(readFileFromWorkspace(path))
         }
         job
-    }*/
+    }
     /*
        * Use this function to add more default parameters to the job configuration
        *

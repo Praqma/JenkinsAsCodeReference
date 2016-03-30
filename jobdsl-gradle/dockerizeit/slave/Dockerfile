@@ -10,7 +10,6 @@ RUN apt-get update && apt-get install -y net-tools && rm -rf /var/lib/apt/lists/
 RUN apt-get update
 RUN apt-get install -y maven
 RUN apt-get install -y git
-RUN apt-get install -y make
 RUN curl -sL https://deb.nodesource.com/setup_0.10 | bash -
 RUN apt-get install -y nodejs
 RUN apt-get install -y sudo
@@ -22,9 +21,6 @@ RUN sudo usermod -a -G sudo jenkins-slave
 COPY start.sh /usr/local/bin/start.sh
 RUN chown jenkins-slave /usr/local/bin/start.sh
 RUN chmod 755 /usr/local/bin/start.sh
-
-# Make sure that jenkins-slave owns stuff in $HOME/.npm
-RUN chown -R jenkins-slave /home/jenkins-slave/.npm
 
 USER jenkins-slave
 VOLUME /home/jenkins-slave
