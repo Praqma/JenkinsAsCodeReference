@@ -14,8 +14,8 @@ class JobsHelper {
     /*
      * Use this function to add GitLab trigger to the job configuration
      *
-     * @param job     Job instance
-     * @param debug   debug mode
+     * @Job job         Job instance
+     * @boolean debug   debug mode
      */
     public static Job createJob(DslFactory dslFactory, String name, boolean debug=false) {
         if (debug == true) {
@@ -28,9 +28,9 @@ class JobsHelper {
     /*
        * Use this function to add shell step to the job configuration
        *
-       * @param job     Job instance
-       * @param command Add shell command
-       * @param debug   debug mode
+       * @Job job         Job instance
+       * @String command  Add shell command
+       * @boolean debug   debug mode
        */
     public static Job addShellStep(Job job, String command, boolean debug=false) {
         if (debug == true) {
@@ -43,27 +43,10 @@ class JobsHelper {
         job
     }
     /*
-       * Use this function to add shell step to the job configuration
-       *
-       * @param job     Job instance
-       * @param path    Path to the shell script file
-       * @param debug   debug mode
-       */
-    public static Job addShellScriptStep(Job job, String path, boolean debug=false) {
-        if (debug == true) {
-            // TODO: set something for the debug mode
-            println 'Debug is set to true'
-        }
-        job.steps() {
-            shell(readFileFromWorkspace(path))
-        }
-        job
-    }
-    /*
        * Use this function to add more default parameters to the job configuration
        *
-       * @param job     Job instance
-       * @param debug   debug mode
+       * @Job job         Job instance
+       * @boolean debug   debug mode
        */
     public static Job addDescriptionParam(Job job, boolean debug=false) {
         if (debug == true) {
@@ -78,12 +61,11 @@ class JobsHelper {
     /*
     * Use this function to configure SCM block to job configuration
     *
-    * @param job          Job instance
-    * @param repo         URL to Gitlab project
-    * @param credential   Credentials for gitlab access
-    * @param repoBranch   Specify branche
-    * @param isRecursive  add recursive
-    * @param debug        debug mode
+    * @Job job             Job instance
+    * @String repo         URL to Gitlab project
+    * @String credential   Credentials for gitlab access
+    * @String repoBranch   Specify branche
+    * @boolean debug       debug mode
     */
     public static Job addScmBlock(Job job, String repo, String repoBranch, String credential, boolean debug=false) {
         if (debug == true) {
@@ -105,8 +87,8 @@ class JobsHelper {
     /*
     * Use this function to add GitLab trigger to the job configuration
     *
-    * @param job     Job instance
-    * @param debug   debug mode
+    * @param job       Job instance
+    * @boolean debug   debug mode
     */
     public static Job addGitLabTrigger(Job job, boolean debug=false) {
         if (debug == true) {
@@ -134,10 +116,10 @@ class JobsHelper {
     /*
    * Use this function to configure Slack block to the job configuration
    *
-   * @param job        Job instance
-   * @param domain     Slack domain name
-   * @param channel    Slack channel
-   * @param debug      debug mode
+   * @Job job           Job instance
+   * @String domain     Slack domain name
+   * @String channel    Slack channel
+   * @boolean debug      debug mode
    */
 
     static void addSlackNotification(Job job, String domain, String channel, boolean debug=false) {
@@ -159,10 +141,9 @@ class JobsHelper {
     /*
     * Use this function to configure Pretested Integration plugin
     *
-    * @param context     Job instance
-    * @param debug       debug mode
+    * @Job job             Job instance
+    * @boolean debug       debug mode
     */
-
     public static void addPretestedIntegration(Job job, boolean debug=false) {
         if (debug == true) {
             // TODO: set something for the debug mode
@@ -179,5 +160,39 @@ class JobsHelper {
                 rollbackEnabled false
             }
         }
+    }
+    /*
+    * Use this function to add delivery pipeline configuration
+    *
+    * @Job job             Job instance
+    * @String buildStage
+    * @String stepName
+    * @boolean debug       debug mode
+    */
+    public static Job addDeliveryPipelineConfiguration(Job job, String buildStage, String stepName, boolean debug=false) {
+        if (debug == true) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        }
+        job.deliveryPipelineConfiguration(buildStage, stepName)
+        job
+    }
+
+    /*
+    * Use this function to add delivery pipeline trigger
+    *
+    * @Job job        Job instance
+    * @ArrayList      jobs
+    * @boolean debug  debug mode
+    */
+    public static Job addDeliveryPipelineTrigger(Job job, ArrayList<String> jobs, boolean debug=false) {
+        if (debug == true) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        }
+        job.publishers {
+            buildPipelineTrigger(jobs.join(", "))
+        }
+        job
     }
 }

@@ -40,23 +40,6 @@ class JobsHelperTest extends Specification {
         newJob.node.builders.toString().contains("echo 'shell'")
         newJob.node.builders.toString().contains("echo 'new'")
     }
-    def "Should add path to the shell script"(){
-        given:
-        def Job newJob = getDefaultJob()
-
-        when:
-        newJob = JobsHelper.addShellStep(newJob, "resources/file.sh")
-
-        then:
-        newJob.node.builders.toString().contains("resources/file.sh")
-
-       // when:
-       // newJob = JobsHelper.addShellScriptStep(newJob, "/users/user/path/to/another/script.sh")
-
-        //then:
-        //newJob.node.builders.toString().contains("'/users/user/path/to/script.sh'")
-        //newJob.node.builders.toString().contains("'/users/user/path/to/another/script.sh'")
-    }
     def "should add default params to a job"(){
         given:
         def Job newJob = getDefaultJob()
@@ -102,5 +85,30 @@ class JobsHelperTest extends Specification {
             it.includeBranchesSpec[0].value().empty
             it.excludeBranchesSpec[0].value().empty
         }
+    }
+    def "Should set delivery pipeline configuration"() {
+        given:
+        def Job newJob = getDefaultJob()
+
+        when:
+        newJob = JobsHelper.addDeliveryPipelineConfiguration(newJob, "build stage", "step name")
+
+        then:
+        with(newJob.node.'properties'[0].'se.diabol.jenkins.pipeline.PipelineProperty'[0]) {
+            it.taskName[0].value() == "step name"
+            it.stageName[0].value() == "build stage"
+        }
+    }
+    def "Should set delivery pipeline trigger"() {
+        given:
+        def Job newJob = getDefaultJob()
+
+        when:
+        newJob = JobsHelper.addDeliveryPipelineTrigger(newJob, ["foo", "bar"])
+
+        then:
+        newJob.node.'publishers'[0]
+                .'au.com.centrumsystems.hudson.plugin.buildpipeline.trigger.BuildPipelineTrigger'[0]
+                .downstreamProjectNames[0].value() == "foo, bar"
     }
 }
