@@ -39,6 +39,7 @@ class JobsHelper {
         }
         job.steps() {
             shell(command)
+            shell(readFileFromWorkspace('jobdsl-gradle/resources/file.sh'))
         }
         job
     }
