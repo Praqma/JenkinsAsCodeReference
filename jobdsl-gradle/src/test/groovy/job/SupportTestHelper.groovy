@@ -1,8 +1,5 @@
 package job
 
-/**
- * Created by asa on 21/03/16.
- */
 import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.dsl.JobParent
 import javaposse.jobdsl.dsl.MemoryJobManagement
@@ -16,6 +13,10 @@ class SupportTestHelper {
                 }
             }
             JobManagement jm = new MemoryJobManagement()
+            jm.availableFiles['file.sh'] =
+                    '#!/usr/bin/env bash\n' +
+                    'echo "Hello from file!"'
+
             jp.setJm(jm)
             jp
         }

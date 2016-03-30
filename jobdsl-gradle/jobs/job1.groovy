@@ -1,12 +1,11 @@
-/**
- * Created by asa on 21/03/16.
- */
-import job.JobsHelper
+import job.JobBuilder
+
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 
-Job job1 = JobsHelper.createJob(this as DslFactory, "JenkinsCI")
-JobsHelper.addDescriptionParam(job1)
-JobsHelper.addShellStep(job1, "echo 'Hello!'")
-JobsHelper.addScmBlock(job1, "git@team.git", "master", "user1")
-JobsHelper.addPretestedIntegration(job1)
+Job job1 = new JobBuilder(this as DslFactory, "JenkinsCI")
+    .addDescriptionParam()
+    .addShellStep("echo 'Hello!'")
+    .addScmBlock("git@team.git", "master", "user1")
+    .addPretestedIntegration()
+    .build()
