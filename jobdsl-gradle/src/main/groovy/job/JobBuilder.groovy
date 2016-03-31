@@ -31,7 +31,6 @@ public class JobBuilder {
         }
         job.steps() {
             shell(command)
-            shell(dslFactory.readFileFromWorkspace('file.sh'))
         }
         this
     }
