@@ -9,7 +9,7 @@ public class JobBuilder {
     /* default */ Job job
 
     /**
-     * Use this function to add GitLab trigger to the job configuration
+     * Constructor
      *
      * @boolean debug   debug mode
      */
