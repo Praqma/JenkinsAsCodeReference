@@ -25,31 +25,26 @@ if (job) {
 // Create seed-jod. The job will initiate all jobs from alljobs.dsl
 def project = new FreeStyleProject(Jenkins.instance, jobName)
 project.setAssignedLabel()
-//Get local git for checking modifications:
-// TODO add many branches
-List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec("*/docker"))
-List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
+
+// You can mount your local jobdsl repo to /home/jenkins-dsl-gradle - in this case this script
+// will use that one instead of pulling official repo from GitHub. Good for testing small changes!
 def localRepoPath = '/home/jenkins-dsl-gradle'
 def localRepo = new File(localRepoPath)
+List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
 if ( !localRepo.exists() ) {
-  dslGitrepoList.add(new UserRemoteConfig("git@github.com:Praqma/JenkinsAsCodeReference.git",
-          "",
-          "",
-          'jenkins'))
-}
-else {
+  dslGitrepoList.add(new UserRemoteConfig("git@github.com:Praqma/JenkinsAsCodeReference.git", "", "", 'jenkins'))
+} else {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localRepoPath + '/', "origin", "", null))
 }
 
+List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec("master"))
 GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
         dslGitBranches,
         false,
         null, null, null, null);
 project.setScm(dslGitSCM)
-// Just add url:
-// def scm = new GitSCM(projectURL) 
-// Add also branch and credentialsId. 
-// Get script execute from checked out git repository:
+
+// Setup JobDSL build step
 def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false", targets="jobdsl-gradle/jobs/*.groovy", scriptText=""),
                                             ignoreExisting=false,
                                             removedJobAction=RemovedJobAction.DELETE,
