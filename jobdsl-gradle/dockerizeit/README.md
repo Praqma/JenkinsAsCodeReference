@@ -1,14 +1,30 @@
-Jenkins in Docker
+#Jenkins in Docker
 
-To run up the master+slaves conatiners by docker-compose, please update the yml file. 
-To have access to the GIT repo you might use SSH connection, for that you need to generate SSH keys, update the repo with users you want to have the access by SSH and mount the directory with all keys for the user to containers:
+### Running
 
-volumes:
-   - /path/to/.ssh_jenkins:/var/jenkins_home/.ssh 
+Simply build and kick off setup using docker-compose
 
-Also mount the directory to keep your jobs history in the case of Jenkins updating:
-   - /path/to/backup/jenkins-home-backup/jobs:/var/jenkins_home/jobs
+```
+docker-compose up -d
+```
 
-For the slaves, you have to mount SSH directory either. Here you might mount any sources, licences you need to provide for the jobs execution.
+Make sure that user you use to run master container has ~/.ssh directory with the relevant ssh key. Jenkins will automatically create credentials called jenkins using key from that directory. You will need to create jenkins user in your Git hosting system
 
-Add the links to some external containers your jobs or configuration will depend.  
+### Configuration
+
+Jenkins configured on startup using groovy scripts from the master directory
+
+* credentials.groovy. TBD
+* globalconfig.groovy. TBD
+* initialjobs.groovy. TBD
+
+### Upgrading plugins, removing/installing plugins
+
+Plugins configuration managed through the master/plugins.txt. To update its content first go to Manage Jenkins -> Manage Plugins and install necessary upldates, uninstall plugins and etc.
+When ready run the following in Manage Jenkins -> Script console and then copy output to plugins.txt
+
+```
+plugins = [:]
+jenkins.model.Jenkins.instance.getPluginManager().getPlugins().each {plugins << ["${it.getShortName()}":"${it.getVersion()}"]}
+plugins.sort().each() { println "${it.key}:${it.value}"}
+```
