@@ -1,9 +1,3 @@
-/******************************************************************************************************************************/
-/* Created by alexsedova 
-/* Initial seed job 
-/* Seed job initial all jobs from *.dsl scripts 
-/*
-/******************************************************************************************************************************/
 import hudson.model.*
 import jenkins.model.*
 import hudson.slaves.*
@@ -41,7 +35,7 @@ if ( !localRepo.exists() ) {
   dslGitrepoList.add(new UserRemoteConfig("git@github.com:Praqma/JenkinsAsCodeReference.git",
           "",
           "",
-          'alexsedova'))
+          'jenkins'))
 }
 else {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localRepoPath + '/', "origin", "", null))

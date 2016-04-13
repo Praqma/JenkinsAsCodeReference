@@ -1,15 +1,13 @@
-jmaster:
-  build: master/
-  ports:
-   - "8080:8080"
-   - "50000:50000"
-  volumes:
-   - /Users/asa/.ssh:/var/jenkins_home/.ssh
-   - /Users/asa/jenkins-home-backup/jobs:/var/jenkins_home/jobs
-jslave:
-  build: slave/
-  volumes:
-   - /Users/asa/.ssh:/home/jenkins-slave/.ssh
-   - /etc/ssl/certs:/etc/ssl/certs
-  links:
-   - jmaster
+version: "2"
+
+services:
+  jmaster:
+    build: master/
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - $HOME/.ssh:/var/jenkins_home/.ssh
+      - $HOME/jenkins-home-backup/jobs:/var/jenkins_home/jobs
+  jslave:
+    build: slave/
