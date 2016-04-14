@@ -48,7 +48,7 @@ class JobsHelperTest extends Specification {
         JobBuilder builder = new JobBuilder(getJobParent(), "testjob")
 
         when:
-        builder.addDescriptionParam()
+        builder.addLogRotator()
 
         then:
         builder.job.node.logRotator[0].numToKeep[0].value() == 20

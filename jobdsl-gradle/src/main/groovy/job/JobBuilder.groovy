@@ -57,13 +57,13 @@ public class JobBuilder {
      *
      * @boolean debug   debug mode
      */
-    public JobBuilder addDescriptionParam(boolean debug = false) {
+    public JobBuilder addLogRotator(int num = 20, boolean debug = false) {
         if (debug) {
             // TODO: set something for the debug mode
             println 'Debug is set to true'
         }
         job.logRotator {
-            numToKeep(20)
+            numToKeep(num)
         }
         this
     }
@@ -154,7 +154,7 @@ public class JobBuilder {
      *
      * @boolean debug       debug mode
      */
-    public JobBuilder addPretestedIntegration(boolean debug = false) {
+    public JobBuilder addPretestedIntegration(String branchName = "master", boolean debug = false) {
         if (debug) {
             // TODO: set something for the debug mode
             println 'Debug is set to true'
@@ -163,11 +163,11 @@ public class JobBuilder {
             project / publishers << 'org.jenkinsci.plugins.pretestedintegration.PretestedIntegrationPostCheckout' {}
             project / buildWrappers << 'org.jenkinsci.plugins.pretestedintegration.PretestedIntegrationBuildWrapper' {
                 scmBridge('class': 'org.jenkinsci.plugins.pretestedintegration.scm.git.GitBridge') {
-                    branch 'master'
+                    branch branchName
                     integrationStrategy('class': 'org.jenkinsci.plugins.pretestedintegration.scm.git.SquashCommitStrategy')
                     repoName 'origin'
-                }
-                rollbackEnabled false
+                 }
+                 rollbackEnabled false
             }
         }
         this
