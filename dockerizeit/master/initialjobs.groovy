@@ -13,7 +13,7 @@ import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
 import hudson.plugins.sshslaves.*
 
-def jobName = 'seed-job'
+def jobName = 'jenkins_as_a_code-seedjob'
 def instance = Jenkins.getInstance()
 
 // Remove seed job if already exists
