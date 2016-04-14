@@ -8,6 +8,12 @@ services:
       - "50000:50000"
     volumes:
       - $HOME/.ssh:/var/jenkins_home/.ssh
-      - $HOME/jenkins-home-backup/jobs:/var/jenkins_home/jobs
+      - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
+
   jslave:
     build: slave/
+
+  registry:
+    image: registry:2.4.0
+    volumes:
+      - $HOME/jenkins-backup/registry:/var/lib/registry
