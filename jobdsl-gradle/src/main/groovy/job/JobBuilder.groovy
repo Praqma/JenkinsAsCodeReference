@@ -95,6 +95,24 @@ public class JobBuilder {
     }
 
     /**
+     * Use this function to add SCM poll trigger
+     *
+     * @String schedule     Specify how often to poll - cron string
+     * @boolean debug       debug mode
+     */
+    public JobBuilder addScmPollTrigger(String schedule = '* * * * *', boolean debug = false) {
+        if (debug) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        } else {
+            job.triggers {
+                scm(schedule)
+            }
+        }
+        this
+    }
+
+    /**
      * Use this function to add GitLab trigger to the job configuration
      *
      * @param job Job instance

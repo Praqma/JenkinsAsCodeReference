@@ -132,4 +132,29 @@ class JobsHelperTest extends Specification {
         wraps.'scmBridge'[0].'repoName'[0].value() == 'origin'
 
     }
+
+    def "Should add SCM poll trigger"() {
+        given:
+        JobBuilder builder = new JobBuilder(getJobParent(), "testjob")
+
+        when:
+        builder.addScmPollTrigger()
+
+        then:
+        def trigger = builder.job.node.'triggers'[0].'hudson.triggers.SCMTrigger'[0]
+        trigger.'spec'[0].value() == '* * * * *'
+    }
+
+    def "Should add SCM poll trigger with value different from default"() {
+        given:
+        JobBuilder builder = new JobBuilder(getJobParent(), "testjob")
+
+        when:
+        builder.addScmPollTrigger("other value")
+
+        then:
+        def trigger = builder.job.node.'triggers'[0].'hudson.triggers.SCMTrigger'[0]
+        trigger.'spec'[0].value() == 'other value'
+    }
+
 }
