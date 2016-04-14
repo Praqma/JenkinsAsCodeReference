@@ -6,4 +6,4 @@ RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
 
 # Copy configuration scripts that will be executed by groovy
 COPY *.groovy /usr/share/jenkins/ref/init.groovy.d/
-
+COPY *.properties $JENKINS_HOME/

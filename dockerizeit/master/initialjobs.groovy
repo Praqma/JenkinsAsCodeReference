@@ -1,3 +1,5 @@
+import java.util.Properties
+import java.lang.System
 import hudson.model.*
 import jenkins.model.*
 import hudson.slaves.*
@@ -16,47 +18,57 @@ import hudson.plugins.sshslaves.*
 def jobName = 'jenkins_as_a_code-seedjob'
 def instance = Jenkins.getInstance()
 
-// Remove seed job if already exists
+println "--> Remove seed job if already exists"
 job = Jenkins.instance.getJob(jobName)
 if (job) {
   job.delete()
 }
 
-// Create seed-jod. The job will initiate all jobs from alljobs.dsl
+println "--> Read properties from the file"
+Properties properties = new Properties()
+def home_dir = System.getenv("JENKINS_HOME")
+File propertiesFile = new File("$home_dir/jenkins.properties")
+propertiesFile.withInputStream {
+  properties.load(it)
+}
+println "--> Create seed-jod. The job will initiate all jobs from alljobs.dsl"
 def project = new FreeStyleProject(Jenkins.instance, jobName)
 project.setAssignedLabel()
 
 // You can mount your local jobdsl repo to /home/jenkins-dsl-gradle - in this case this script
 // will use that one instead of pulling official repo from GitHub. Good for testing small changes!
-def localRepoPath = '/home/jenkins-dsl-gradle'
-def localRepo = new File(localRepoPath)
+println "--> Configute Git access"
+def localGitPath = properties.localRepoPath
+def localRepo = new File(localGitPath)
 List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
 if ( !localRepo.exists() ) {
-  dslGitrepoList.add(new UserRemoteConfig("git@github.com:Praqma/JenkinsAsCodeReference.git", "", "", 'jenkins'))
+  dslGitrepoList.add(new UserRemoteConfig(properties.gitRepo, "", "", properties.gitUserName))
 } else {
-  dslGitrepoList.add(new UserRemoteConfig("file://" + localRepoPath + '/', "origin", "", null))
+  dslGitrepoList.add(new UserRemoteConfig("file://" + localGitPath + '/', "origin", "", null))
 }
 
-List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec("master"))
+List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec(properties.gitBranch))
 GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
         dslGitBranches,
         false,
         null, null, null, null);
 project.setScm(dslGitSCM)
 
-// Setup JobDSL build step
-def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false", targets="jobdsl-gradle/jobs/*.groovy", scriptText=""),
+println "--> Setup JobDSL build step"
+def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false",
+                                                                      targets=properties.dslTargetDirectory,
+                                                                      scriptText=""),
                                             ignoreExisting=false,
                                             removedJobAction=RemovedJobAction.DELETE,
                                             removedViewAction=RemovedViewAction.DELETE,
                                             lookupStrategy=LookupStrategy.JENKINS_ROOT,
-                                            additionalClasspath='jobdsl-gradle/src/main/groovy');
+                                            additionalClasspath=properties.dslAdditionalClasspath);
 
 project.getBuildersList().add(jobDslBuildStep)
 project.addTrigger(new TimerTrigger("@midnight"))
 project.save()
 Jenkins.instance.reload()
 
-// trigger jobs generation
+println "--> Trigger jobs generation"
 job = Jenkins.instance.getJob(jobName)
 hudson.model.Hudson.instance.queue.schedule(job)
