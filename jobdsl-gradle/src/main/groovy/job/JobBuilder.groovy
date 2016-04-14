@@ -6,16 +6,23 @@ import javaposse.jobdsl.dsl.Job
 public class JobBuilder {
 
     private DslFactory dslFactory
-    /* default */ Job job
+    /* default */ def job
 
     /**
-     * Constructor
+     * Create job
      *
-     * @boolean debug   debug mode
+     * @String name   job name
+     * @String type   job type (freestyle, pipeline)
      */
-    public JobBuilder(DslFactory dslFactory, String name) {
+    public JobBuilder(DslFactory dslFactory, String name, String type = 'freestyle') {
         this.dslFactory = dslFactory;
-        this.job = this.dslFactory.job(name)
+        if ( type == 'freestyle' ) {
+            this.job = this.dslFactory.job(name)
+        } else if ( type == 'pipeline' ) {
+            this.job = this.dslFactory.workflowJob(name)          
+        } else {
+            throw new Exception('Not supported job type')
+        }
     }
 
     /**
@@ -48,6 +55,25 @@ public class JobBuilder {
         }
         job.steps() {
             shell(dslFactory.readFileFromWorkspace(filepath))
+        }
+        this
+    }
+
+
+    /**
+     * Use this function to add	pipeline script	definition as a file
+     *
+     * @String  script	Script to add
+     * @boolean debug   debug mode
+     */
+    public JobBuilder addPipelineDefinitionFile(String filePath, boolean debug = false) {
+        if (debug) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        } else {
+            job.definition {
+                cps { script(dslFactory.readFileFromWorkspace(filePath)) }
+            }
         }
         this
     }

@@ -3,7 +3,7 @@ package job
 import spock.lang.*
 
 import static job.SupportTestHelper.getJobParent
-
+import javaposse.jobdsl.dsl.jobs.*
 class JobsHelperTest extends Specification {
 
     def "Should create a job"() {
@@ -12,6 +12,16 @@ class JobsHelperTest extends Specification {
 
         then:
         builder.job.name == "testjob"
+        builder.job.getClass() == FreeStyleJob
+    }
+
+    def "Should create a pipeline job"() {
+        when:
+        JobBuilder builder = new JobBuilder(getJobParent(), "testjob", "pipeline")
+
+        then:
+        builder.job.name == "testjob"
+        builder.job.getClass() == WorkflowJob
     }
 
     def "Should add shell commands to a existing job"() {
@@ -43,7 +53,20 @@ class JobsHelperTest extends Specification {
         builder.job.node.builders.toString().contains('#!/usr/bin/env bash\n' +
                 'echo "Hello from file!"')
     }
-    def "should add default params to a job"(){
+
+    def "Should add content of the file as a pipeline script"(){
+        given:
+        JobBuilder builder = new JobBuilder(getJobParent(), "testjob", "pipeline")
+
+        when:
+        builder.addPipelineDefinitionFile('file.sh')
+
+        then:
+        builder.job.node.definition.script.toString().contains('#!/usr/bin/env bash\n' +
+                'echo "Hello from file!"')
+    }
+
+    def "should add Log Rotator to a job"(){
         given:
         JobBuilder builder = new JobBuilder(getJobParent(), "testjob")
 
