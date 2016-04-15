@@ -12,13 +12,16 @@ node {
    sh 'cd jobdsl-gradle; ./gradlew test'
 
    stage 'Build master Docker image'
-   sh 'cd dockerizeit/master; docker build -t registry:5000/jmaster:$(git describe --tags) .; docker tag registry:5000/jmaster:$(git describe --tags) registry:5000/jmaster:latest'
+   sh 'cd dockerizeit/master; docker build -t localhost:5000/reference/jmaster:$(git describe --tags) .; docker tag localhost:5000/reference/jmaster:$(git describe --tags) localhost:5000/reference/jmaster:latest'
 
    stage 'Build slave Docker image'
-   sh 'cd dockerizeit/slave; docker build -t registry:5000/jslave:$(git describe --tags) .; docker tag registry:5000/jslave:$(git describe --tags) registry:5000/jslave:latest'
+   sh 'cd dockerizeit/slave; docker build -t localhost:5000/reference/jslave:$(git describe --tags) .; docker tag localhost:5000/reference/jslave:$(git describe --tags) localhost:5000/reference/jslave:latest'
 
-   stage 'Push to Artifactory'
-   sh 'docker push registry:5000/jmaster:$(git describe --tags) registry:5000/jmaster:latest registry:5000/jslave:$(git describe --tags) registry:5000/jslave:latest'
+   stage 'Push to registry'
+   sh 'docker push localhost:5000/reference/jmaster:$(git describe --tags)'
+   sh 'docker push localhost:5000/reference/jmaster:latest'
+   sh 'docker push localhost:5000/reference/jslave:$(git describe --tags)'
+   sh 'docker push localhost:5000/reference/jslave:latest'
    
    stage 'Deploy'
 }
