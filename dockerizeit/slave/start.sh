@@ -11,7 +11,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
   # Set default number of executors (2 by default)
   PARAMS="$PARAMS -executors ${NUM_OF_EXECUTORS:-2}"
 
-  echo Running java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"
+  echo Running java $JAVA_OPTS -jar $JAR -fsroot $HOME/slave $PARAMS "$@"
   exec java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"
 fi
 
