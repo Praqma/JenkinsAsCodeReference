@@ -14,6 +14,7 @@ Make sure that user you use to run master container has ~/.ssh directory with th
 
 Jenkins configured on startup using groovy scripts from the master directory
 
+* artifactory.groovy. TBD
 * credentials.groovy. TBD
 * globalconfig.groovy. TBD
 * initialjobs.groovy. TBD
