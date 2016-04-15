@@ -72,7 +72,8 @@ public class JobBuilder {
             println 'Debug is set to true'
         } else {
             job.definition {
-                cps { script(dslFactory.readFileFromWorkspace(filePath)) }
+                cps { script(dslFactory.readFileFromWorkspace(filePath))
+                      sandbox() }
             }
         }
         this
