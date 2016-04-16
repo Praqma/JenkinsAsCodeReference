@@ -1,20 +1,14 @@
 version: "2"
 
 services:
-  data:
-    image: alpine:3.3
-    command: echo "Do nothing"
-    volumes:
-      - $HOME/.ssh:/var/jenkins_home/.ssh
-      - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
-
   jmaster:
     build: master/
     ports:
       - "8080:8080"
       - "50000:50000"
-    volumes_from:
-      - data
+    volumes:
+      - $HOME/.ssh:/var/jenkins_home/.ssh
+      - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
 
   jslave:
     build: slave/
