@@ -7,7 +7,8 @@ In his 1886 philosophical treatise Beyond Good and Evil,
 Friedrich Nietzsche uses one of the Baron's adventures,
 the one in which he rescues himself from a swamp,
 as a metaphor for belief in complete metaphysical free will;
-Nietzsche calls this belief an attempt "to pull oneself up into existence by the hair, out of the swamps of nothingness"
+Nietzsche calls this belief an attempt
+"to pull oneself up into existence by the hair, out of the swamps of nothingness"
 ```
 
 ![Munchausen](baron.jpg)
