@@ -9,7 +9,7 @@ services:
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
 
   jmaster:
-    build: master/
+    image: localhost:5000/reference/jmaster:${VERSION}
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -17,7 +17,7 @@ services:
       - data
 
   jslave:
-    build: slave/
+    image: localhost:5000/reference/jmaster:${VERSION}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker:/var/lib/docker

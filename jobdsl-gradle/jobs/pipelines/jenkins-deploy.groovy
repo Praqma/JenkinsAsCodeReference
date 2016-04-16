@@ -18,10 +18,16 @@ node {
    sh 'cd dockerizeit/slave; docker build -t localhost:5000/reference/jslave:$(git describe --tags) .; docker tag localhost:5000/reference/jslave:$(git describe --tags) localhost:5000/reference/jslave:latest'
 
    stage 'Push to registry'
-   sh 'docker push localhost:5000/reference/jmaster:$(git describe --tags)'
-   sh 'docker push localhost:5000/reference/jmaster:latest'
-   sh 'docker push localhost:5000/reference/jslave:$(git describe --tags)'
-   sh 'docker push localhost:5000/reference/jslave:latest'
-   
+   parallel pushMaster: {
+        sh 'docker push localhost:5000/reference/jmaster:$(git describe --tags)'
+        sh 'docker push localhost:5000/reference/jmaster:latest'
+    }, pushSlave: {
+        sh 'docker push localhost:5000/reference/jslave:$(git describe --tags)'
+        sh 'docker push localhost:5000/reference/jslave:latest'
+    },
+    failFast: true
+
    stage 'Deploy'
+   input message: 'Deploy new Jenkins instance?', ok: 'Deploy!'
+   sh 'cd dockerizeit/munchausen; docker build -t munchausen .; docker run -d -v /var/run/docker.sock:/var/run/docker.sock munchausen $(git describe --tags)'
 }
