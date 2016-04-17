@@ -7,15 +7,15 @@ services:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - $HOME/.ssh:/var/jenkins_home/.ssh
-      - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
+      - ${SSH_VOLUME}
+      - ${BACKUP_VOLUME}
 
   jslave:
-    image: localhost:5000/reference/jmaster:${VERSION}
+    image: localhost:5000/reference/jslave:${VERSION}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker:/var/lib/docker
-      - $HOME/jenkins-backup/slave/gradle:/root/.gradle
+      - ${GRADLE_VOLUME}
 
   registry:
     image: registry:2.4.0
