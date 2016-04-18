@@ -5,40 +5,36 @@ repositories {
     mavenCentral()
     maven { url('http://repo.jenkins-ci.org/releases/') }
 }
+
 sourceSets {
     jobs {
-        groovy {
-            srcDirs 'jobs'
-        }
     }
+}
+
+task copyJobs(type: Copy) {
+    from 'src/jobs/groovy'
+    include '*.groovy'
+    into "$project.buildDir/jobs"
+}
+
+task copyResources(type: Copy) {
+    from 'src/jobs/resources'
+    into "$project.buildDir/jobs/jobdsl-gradle/src/jobs/resources"
 }
 
 task buildXml {
 }
 
-task copyResources(type: Copy) {
-    from 'resources'
-    include '*.sh'
-    into "$project.buildDir/resources"
-}
-
-task copyJobs(type: Copy) {
-    from 'jobs'
-    include '*.gdsl'
-    into "$project.buildDir/jobs"
-}
-
-fileTree(dir: "${project.projectDir}/jobs", include: '**/*.gdsl').each { file ->
+fileTree(dir: "${project.projectDir}/src/jobs/groovy", include: '**/*.groovy').each { file ->
 
     def baseName = file.name[0..file.name.lastIndexOf('.') - 1]
     def output = new File(project.buildDir, baseName)
-
 
     def buildSingleXml = tasks.create(name: "build${baseName.capitalize()}Xml", type: JavaExec) {
         main = 'javaposse.jobdsl.Run'
         classpath = sourceSets.main.runtimeClasspath
         args "${project.buildDir}/jobs/${file.name}"
-        workingDir output
+        workingDir "$project.buildDir/jobs"
     }
 
     buildSingleXml.doFirst {
@@ -60,6 +56,6 @@ dependencies {
     compile "org.jenkins-ci.plugins:job-dsl:${project.ext.jobDslVersion}@jar"
     compile "org.jenkins-ci.plugins:job-dsl-core:${project.ext.jobDslVersion}"
     compile "org.jenkins-ci.plugins:gradle:${project.ext.gradlePluginVersion}@jar"
-    compile 'org.jenkins-ci.plugins:git:2.4.0@jar'
+    compile "org.jenkins-ci.plugins:git:2.4.0@jar"
     testCompile group: 'org.spockframework', name: 'spock-core', version: '1.0-groovy-2.4'
 }
