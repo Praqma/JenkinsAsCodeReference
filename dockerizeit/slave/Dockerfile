@@ -3,6 +3,11 @@ FROM java:8-jdk
 ENV JENKINS_SWARM_VERSION 2.0
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
+# Add proxy env
+ENV HTTP_PROXY=$http_proxy
+ENV HTTPS_PROXY=$https_proxy
+ENV NO_PROXY=$no_proxy
+
 # install netstat to allow connection health check with + other tools required by the jobs
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 RUN apt-get update && apt-get install -y maven git net-tools docker-engine
