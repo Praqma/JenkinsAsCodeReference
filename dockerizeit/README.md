@@ -18,6 +18,7 @@ Jenkins configured on startup using groovy scripts from the master directory
 * credentials.groovy. TBD
 * globalconfig.groovy. TBD
 * initialjobs.groovy. TBD
+* secutiryLDAP.groovy. TBD
 
 ### Upgrading plugins, removing/installing plugins
 
