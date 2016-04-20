@@ -5,14 +5,15 @@ if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
 
   # jenkins swarm slave
   JAR=`ls -1 /usr/share/jenkins/swarm-client-*.jar | tail -n 1`
+  
   PARAMS="-master http://jmaster:8080"
 
   # Set default number of executors (2 by default)
   PARAMS="$PARAMS -executors ${NUM_OF_EXECUTORS:-2}"
 
   # Set labels to slave
-  PARAMS="$PARAMS -labels \"Linux\""
-  PARAMS="$PARAMS -labels \"Docker\""
+  PARAMS="$PARAMS -labels \"linux\" -labels \"debian\" -labels \"jessie\" -labels \"java\" -labels \"docker\""
+
   echo Running java $JAVA_OPTS -jar $JAR -fsroot $HOME/slave $PARAMS "$@"
   exec java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"
 fi
