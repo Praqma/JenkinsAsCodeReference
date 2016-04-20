@@ -35,8 +35,8 @@ then
   exit 1
 fi
 
-echo "Kill master"
-docker rm -f dockerizeit_jmaster_1 dockerizeit_jslave_1
+echo "Stop master and slave"
+docker stop dockerizeit_jmaster_1 dockerizeit_jslave_1
 
-echo "Start new master container"
+echo "Start new master and slave container using images with version $VERSION"
 docker-compose -p dockerizeit up -d
