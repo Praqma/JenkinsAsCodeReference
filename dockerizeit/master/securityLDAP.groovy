@@ -4,7 +4,7 @@ import jenkins.model.*
 import hudson.security.*
 import org.jenkinsci.plugins.*
 
-println "--> Read properties from the file"
+println "--> LDAPsecurity: Read properties from the file"
 
 Properties properties = new Properties()
 def home_dir = System.getenv("JENKINS_HOME")
