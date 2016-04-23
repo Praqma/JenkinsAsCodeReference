@@ -2,7 +2,12 @@ version: "2"
 
 services:
   jmaster:
-    build: master/
+    build:
+      context: master/
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -11,7 +16,12 @@ services:
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
 
   jslave:
-    build: slave/
+    build:
+      context: slave/
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker:/var/lib/docker

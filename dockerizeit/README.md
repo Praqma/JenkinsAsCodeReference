@@ -2,9 +2,12 @@
 
 ### First start
 
-Simply build and kick off setup using docker-compose
+Simply build and kick off setup using docker-compose. Important! There is [a bug in docker-compose](https://github.com/docker/compose/issues/3281) which makes args return None instead of empty string. Because of that, if you don't use proxy, you have to define empty environment variables http_proxy, https_proxy, no_proxy. Otherwise you would have those variables set to point out your proxy settings 
 
 ```
+export http_proxy=<empty or proxy address>
+export https_proxy=<empty or proxy address>
+export no_proxy=<empty or proxy address>
 docker-compose -p dockerizeit up -d --build
 ```
 
