@@ -13,10 +13,10 @@ ENV no_proxy=$no_proxy
 
 # install netstat to allow connection health check with + other tools required by the jobs
 RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
-RUN apt-get update && apt-get install -y maven git net-tools docker-engine python-pip
+RUN rm -rf /etc/apt/sources.list.d/jessie-backports.list && apt-get update && apt-get install -y maven git net-tools docker-engine python-pip python-yaml
 
 # install docker compose
-RUN pip install docker-compose==1.7
+RUN pip install docker-compose==1.7 docopt==0.6.2
 
 RUN curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar \
   && chmod 755 /usr/share/jenkins

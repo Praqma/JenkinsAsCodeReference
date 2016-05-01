@@ -30,5 +30,8 @@ node {
     failFast: true
 
    stage 'Deploy'
+   sh './dockerizeit/generate-compose.py --debug --file dockerizeit/docker-compose.yml --jmaster-image localhost:5000/reference/jmaster --jmaster-version $(git describe --tags) --jslave-image localhost:5000/reference/jslave --jslave-version $(git describe --tags)'
+   sh 'cp docker-compose.yml dockerizeit/munchausen/'
    sh 'cd dockerizeit/munchausen && docker build -t munchausen . && docker run -d -v /var/run/docker.sock:/var/run/docker.sock munchausen $(git describe --tags)'
+   archive 'docker-compose.yml'
 }
