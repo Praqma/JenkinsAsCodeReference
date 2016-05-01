@@ -24,6 +24,7 @@ from docopt import docopt
 from subprocess import check_output
 import logging
 import yaml
+import re
 
 arguments = docopt(__doc__)
 
@@ -56,6 +57,15 @@ logging.debug("Before: {}".format(doc["services"]["jmaster"]))
 del doc["services"]["jmaster"]["build"]
 doc["services"]["jmaster"]["image"] = "{}:{}".format(arguments['--jmaster-image'], arguments['--jmaster-version'])
 doc["services"]["jmaster"]["volumes"] = jmaster_binds.strip('[|]').replace(":rw","").split()
+# We have to check that we don't have not mounted volumes like 1ab3ba428445786de381d741cd2d3c4dff2e956342f02712ef205fa63ba47779:/var/jenkins_home
+# This volume comes from Jenkins Dockerfile - it is declared there but we do not mount it explicitly
+# If bring it to the compose file like this 1ab3ba428445786de381d741cd2d3c4dff2e956342f02712ef205fa63ba47779:/var/jenkins_home then
+# docker-compose won't be able to create new container to replace old one since we have direct reference to the volume mount point
+pattern=re.compile("^[a-zA-Z0-9]+:/var/jenkins_home$")
+for item in doc["services"]["jmaster"]["volumes"]:
+  if re.findall(pattern, item):
+    logging.debug("Found not mounted volume {}. Drop it from the volumes list...".format(re.findall(pattern, item)[0]))
+    doc["services"]["jmaster"]["volumes"].remove(re.findall(pattern, item)[0])
 logging.debug("After: {}".format(doc["services"]["jmaster"]))
 
 logging.info("Update definition for jslave. Relace build with image...")

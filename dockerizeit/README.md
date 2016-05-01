@@ -5,7 +5,7 @@
 Simply build and kick off setup using docker-compose
 
 ```
-docker-compose up -d --build
+docker-compose -p dockerizeit up -d --build
 ```
 
 Make sure that user you use to run master container has ~/.ssh directory with the relevant ssh key. Jenkins will automatically create credentials called jenkins using key from that directory. You will need to create jenkins user in your Git hosting system
@@ -13,6 +13,11 @@ Make sure that user you use to run master container has ~/.ssh directory with th
 ### Restart/Start
 
 Download docker-compose.yml attached to the latest deployment pipeline execution and run it using docker-compose
+
+```
+wget <docker compose file url>
+docker-compose -p dockerizeit -d
+```
 
 ### Configuration
 
