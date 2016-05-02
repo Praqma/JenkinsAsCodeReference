@@ -1,4 +1,4 @@
-FROM jenkins:1.642.4
+FROM jenkins:1.651.1-alpine
 
 # Add proxy env
 ENV HTTP_PROXY=$HTTP_PROXY

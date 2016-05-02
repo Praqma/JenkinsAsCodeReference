@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM alpine:3.3
 
 # Add proxy env
 ENV HTTP_PROXY=$HTTP_PROXY
@@ -8,11 +8,11 @@ ENV http_proxy=$http_proxy
 ENV https_proxy=$https_proxy
 ENV no_proxy=$no_proxy
 
-# install docker client and pip
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list && apt-get update && apt-get install -y docker-engine python-pip
+# install docker
+RUN apk update && apk add curl && curl -o docker-1.11.0.tgz https://get.docker.com/builds/Linux/x86_64/docker-1.11.0.tgz && tar zxvf docker-1.11.0.tgz && mv docker/* /usr/bin/ && rm -rf docker-*
 
 # install docker compose
-RUN pip install docker-compose==1.7
+RUN apk update && apk add py-pip && pip install docker-compose==1.7
 
 # copy bootstrap script
 COPY bootstrap.sh /bootstrap.sh

@@ -1,7 +1,7 @@
-FROM java:8-jdk
+FROM java:openjdk-8u77-alpine
 
 ENV JENKINS_SWARM_VERSION 2.0
-ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 
 # Add proxy env
 ENV HTTP_PROXY=$HTTP_PROXY
@@ -11,12 +11,14 @@ ENV http_proxy=$http_proxy
 ENV https_proxy=$https_proxy
 ENV no_proxy=$no_proxy
 
-# install netstat to allow connection health check with + other tools required by the jobs
-RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D && echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
-RUN rm -rf /etc/apt/sources.list.d/jessie-backports.list && apt-get update && apt-get install -y maven git net-tools docker-engine python-pip python-yaml
+# install docker
+RUN apk update && apk add curl && curl -o docker-1.11.0.tgz https://get.docker.com/builds/Linux/x86_64/docker-1.11.0.tgz && tar zxvf docker-1.11.0.tgz && mv docker/* /usr/bin/ && rm -rf docker-*
 
-# install docker compose
-RUN pip install docker-compose==1.7 docopt==0.6.2
+# install git, curl, ssh, bash
+RUN apk update && apk add git curl openssh bash
+
+# install docker compose and other python deps
+RUN apk update && apk add py-pip && pip install docker-compose==1.7 docopt==0.6.2 pyyaml==3.11
 
 RUN curl --create-dirs -sSLo /usr/share/jenkins/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar \
   && chmod 755 /usr/share/jenkins
