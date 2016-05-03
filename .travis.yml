@@ -1,0 +1,26 @@
+sudo: required
+
+language: java
+
+services:
+  - docker
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.0
+  DOCKER_VERSION: 1.11.1-0~trusty
+before_install:
+  - apt-cache madison docker-engine
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=${DOCKER_VERSION}
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+script:
+  - docker info
+  - cd $(git rev-parse --show-toplevel)/jobdsl-gradle && ./gradlew buildXml
+  - cd $(git rev-parse --show-toplevel)/jobdsl-gradle && ./gradlew test
+  - cd $(git rev-parse --show-toplevel)/dockerizeit && http_proxy="" https_proxy="" no_proxy="" docker-compose build
