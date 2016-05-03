@@ -3,6 +3,8 @@ import java.lang.System
 import hudson.model.*
 import jenkins.model.*
 import java.net.InetAddress
+import hudson.slaves.EnvironmentVariablesNodeProperty
+import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
 
 println "--> disabling master executors"
 Jenkins.instance.setNumExecutors(0)
@@ -28,11 +30,16 @@ propertiesFile.withInputStream {
     properties.load(it)
 }
 
-println "-->Set Global GIT configuration name and email address"
+println "--> Set Global GIT configuration name to ${properties.globalConfigname} and email address to ${properties.globalConfigEmail}"
 def inst = Jenkins.getInstance()
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 desc.setGlobalConfigName(properties.globalConfigname)
 desc.setGlobalConfigEmail(properties.globalConfigEmail)
+
+println "--> Set SOURCE_REPO env variable to ${properties.gitRepo} "
+EnvironmentVariablesNodeProperty.Entry entry = new EnvironmentVariablesNodeProperty.Entry("SOURCE_REPO", properties.gitRepo);
+Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(entry));
+Jenkins.instance.save()
 
 // Set Global Slack configuration
 /* def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]

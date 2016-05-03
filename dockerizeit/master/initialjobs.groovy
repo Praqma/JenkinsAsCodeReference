@@ -42,7 +42,8 @@ def localGitPath = properties.localRepoPath
 def localRepo = new File(localGitPath)
 List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
 if ( !localRepo.exists() ) {
-  dslGitrepoList.add(new UserRemoteConfig(properties.gitRepo, "", "", properties.gitUserName))
+  // SOURCE_REPO will be set in globalconfig.groovy to point out path to this repo
+  dslGitrepoList.add(new UserRemoteConfig('$SOURCE_REPO', "", "", properties.gitUserName))
 } else {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localGitPath + '/', "origin", "", null))
 }

@@ -5,7 +5,7 @@ node {
              doGenerateSubmoduleConfigurations: false,
              extensions: [[$class: 'CleanBeforeCheckout']],
              submoduleCfg: [],
-             userRemoteConfigs: [[credentialsId: 'jenkins', url: 'https://github.com/Praqma/JenkinsAsCodeReference.git']]])
+             userRemoteConfigs: [[credentialsId: 'jenkins', url: env.SOURCE_REPO]]])
 
    stage 'Verify JobDSL'
    sh 'cd jobdsl-gradle && ./gradlew buildXml'
