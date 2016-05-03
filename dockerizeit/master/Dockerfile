@@ -7,6 +7,12 @@ ENV http_proxy ${http_proxy:-}
 ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
 
+# Define build argument and env variable jenkins_image_version
+# Use to pass info about Jenkins version so it can be represented
+# for the users.
+ARG jenkins_image_version="local build"
+ENV jenkins_image_version $jenkins_image_version
+
 # Install plugins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
