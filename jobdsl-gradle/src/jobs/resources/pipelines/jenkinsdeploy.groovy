@@ -5,7 +5,7 @@ node {
              doGenerateSubmoduleConfigurations: false,
              extensions: [[$class: 'CleanBeforeCheckout']],
              submoduleCfg: [],
-             userRemoteConfigs: [[credentialsId: env.default_credentials, url: env.SOURCE_REPO]]])
+             userRemoteConfigs: [[credentialsId: env.default_credentials, url: env.default_repo]]])
 
    stage 'Verify JobDSL'
    sh 'cd jobdsl-gradle && ./gradlew buildXml'

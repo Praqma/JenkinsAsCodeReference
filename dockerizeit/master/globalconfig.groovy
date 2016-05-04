@@ -39,7 +39,7 @@ desc.setGlobalConfigName(properties.globalConfigname)
 desc.setGlobalConfigEmail(properties.globalConfigEmail)
 
 println "--> Set SOURCE_REPO env variable"
-helpers.addGlobalEnvVariable(Jenkins, 'SOURCE_REPO', properties.gitRepo)
+helpers.addGlobalEnvVariable(Jenkins, 'default_repo', properties.gitRepo)
 
 println "--> Set system message "
 def env = System.getenv()
