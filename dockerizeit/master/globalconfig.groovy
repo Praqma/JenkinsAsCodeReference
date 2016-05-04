@@ -37,9 +37,28 @@ desc.setGlobalConfigName(properties.globalConfigname)
 desc.setGlobalConfigEmail(properties.globalConfigEmail)
 
 println "--> Set SOURCE_REPO env variable to ${properties.gitRepo} "
-EnvironmentVariablesNodeProperty.Entry entry = new EnvironmentVariablesNodeProperty.Entry("SOURCE_REPO", properties.gitRepo);
-Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(entry));
+EnvironmentVariablesNodeProperty.Entry source_repo = new EnvironmentVariablesNodeProperty.Entry("SOURCE_REPO", properties.gitRepo);
+Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(source_repo));
 Jenkins.instance.save()
+
+println "--> Set system message "
+def env = System.getenv()
+if ( env.containsKey('jenkins_image_version') ) {
+  println "jenkins_image_version = ${env['jenkins_image_version']}"
+  // jenkins_image_version set as env variable by the build process
+  // Set it as a global variable in Jenkins to increase visibility
+  EnvironmentVariablesNodeProperty.Entry image_version = new EnvironmentVariablesNodeProperty.Entry('jenkins_image_version', env['jenkins_image_version']);
+  Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(image_version));
+  Jenkins.instance.save()
+  systemMessage = "This Jenkins instance generated from code.\n " +
+                  "Avoid any manual changes since they will be discarded with next deployment.\n " +
+                  "Change source instead. Jenkins docker image version: ${env['jenkins_image_version']}\n\n" +
+                  "Update ${properties.gitRepo} to change configuration"
+  println "Set system message to:\n ${systemMessage}"
+  Jenkins.instance.setSystemMessage(systemMessage)
+} else {
+  prinln "Can't set system message - missing env variable jenkins_image_version"
+}
 
 // Set Global Slack configuration
 /* def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]
