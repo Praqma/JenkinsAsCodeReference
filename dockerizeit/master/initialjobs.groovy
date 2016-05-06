@@ -46,7 +46,7 @@ if ( !localRepo.exists() ) {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localGitPath + '/', "origin", "", null))
 }
 
-List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec(properties.gitBranch))
+List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec('$default_branch'))
 GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
         dslGitBranches,
         false,

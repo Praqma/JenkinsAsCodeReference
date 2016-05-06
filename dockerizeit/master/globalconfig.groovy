@@ -31,9 +31,8 @@ def inst = Jenkins.getInstance()
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 desc.setGlobalConfigName(properties.globalConfigname)
 desc.setGlobalConfigEmail(properties.globalConfigEmail)
-
-println "--> Set SOURCE_REPO env variable"
 helpers.addGlobalEnvVariable(Jenkins, 'default_repo', properties.gitRepo)
+helpers.addGlobalEnvVariable(Jenkins, 'default_branch', properties.gitBranch)
 
 println "--> Set system message "
 def env = System.getenv()

@@ -1,7 +1,7 @@
 node {
    stage 'Checkout'
    checkout([$class: 'GitSCM',
-             branches: [[name: '*/master']],
+             branches: [[name: "*/${env.default_branch}"]],
              doGenerateSubmoduleConfigurations: false,
              extensions: [[$class: 'CleanBeforeCheckout']],
              submoduleCfg: [],
