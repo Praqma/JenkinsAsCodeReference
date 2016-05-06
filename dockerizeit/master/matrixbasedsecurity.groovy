@@ -7,12 +7,11 @@ import hudson.model.*
 
 println "--> Matrix-Based security: Read properties from the file"
 
-Properties properties = new Properties()
 def home_dir = System.getenv("JENKINS_HOME")
-File propertiesFile = new File("$home_dir/jenkins.properties")
-propertiesFile.withInputStream {
-    properties.load(it)
-}
+GroovyShell shell = new GroovyShell()
+def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
+Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
+
 if(properties.isMatrixBasedSecurity.toBoolean()){
 	println "--> Configure Matrix-Based security"
 

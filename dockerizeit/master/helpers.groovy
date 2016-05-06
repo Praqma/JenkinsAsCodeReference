@@ -17,3 +17,13 @@ def addGlobalEnvVariable(Class jenkins, String key, String value) {
   println "--> added global environment variable ${key} = ${value}"
   instance.save()
 }
+
+def readProperties(String properties_file) {
+  println "--> Read properties from ${properties_file}"
+  Properties properties = new Properties()
+  File propertiesFile = new File(properties_file)
+  propertiesFile.withInputStream {
+    properties.load(it)
+  }
+  return properties
+}

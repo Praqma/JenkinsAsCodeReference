@@ -5,8 +5,10 @@ import jenkins.model.*
 import java.net.InetAddress
 
 // load helpers
+def home_dir = System.getenv("JENKINS_HOME")
 GroovyShell shell = new GroovyShell()
-def helpers = shell.parse(new File("/var/jenkins_home/init.groovy.d/helpers.groovy"))
+def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
+Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
 
 println "--> disabling master executors"
 Jenkins.instance.setNumExecutors(0)
@@ -23,14 +25,6 @@ def ip = InetAddress.localHost.getHostAddress()
 jlc = JenkinsLocationConfiguration.get()
 jlc.setUrl("http://$ip:8080")
 jlc.save()
-
-println "--> Read properties from the file"
-Properties properties = new Properties()
-def home_dir = System.getenv("JENKINS_HOME")
-File propertiesFile = new File("$home_dir/jenkins.properties")
-propertiesFile.withInputStream {
-    properties.load(it)
-}
 
 println "--> Set Global GIT configuration name to ${properties.globalConfigname} and email address to ${properties.globalConfigEmail}"
 def inst = Jenkins.getInstance()
