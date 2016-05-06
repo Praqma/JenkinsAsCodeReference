@@ -9,8 +9,10 @@ import com.cloudbees.plugins.credentials.common.*
 import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
 import hudson.plugins.sshslaves.*
-import hudson.slaves.EnvironmentVariablesNodeProperty
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+
+// load helpers
+GroovyShell shell = new GroovyShell()
+def helpers = shell.parse(new File("/var/jenkins_home/init.groovy.d/helpers.groovy"))
 
 println "--> Read properties from the file"
 
@@ -32,6 +34,5 @@ creds = new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL,
                                    "",
                                    "")
 credentials_store.addCredentials(global_domain, creds)
-EnvironmentVariablesNodeProperty.Entry def_cred = new EnvironmentVariablesNodeProperty.Entry('default_credentials', properties.jenkinsSSHUserId);
-Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(def_cred));
-Jenkins.instance.save()
+helpers.addGlobalEnvVariable(Jenkins, 'default_credentials', properties.jenkinsSSHUserId)
+

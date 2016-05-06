@@ -3,8 +3,10 @@ import java.lang.System
 import hudson.model.*
 import jenkins.model.*
 import java.net.InetAddress
-import hudson.slaves.EnvironmentVariablesNodeProperty
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+
+// load helpers
+GroovyShell shell = new GroovyShell()
+def helpers = shell.parse(new File("/var/jenkins_home/init.groovy.d/helpers.groovy"))
 
 println "--> disabling master executors"
 Jenkins.instance.setNumExecutors(0)
@@ -36,10 +38,8 @@ def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 desc.setGlobalConfigName(properties.globalConfigname)
 desc.setGlobalConfigEmail(properties.globalConfigEmail)
 
-println "--> Set SOURCE_REPO env variable to ${properties.gitRepo} "
-EnvironmentVariablesNodeProperty.Entry source_repo = new EnvironmentVariablesNodeProperty.Entry("SOURCE_REPO", properties.gitRepo);
-Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(source_repo));
-Jenkins.instance.save()
+println "--> Set SOURCE_REPO env variable"
+helpers.addGlobalEnvVariable(Jenkins, 'SOURCE_REPO', properties.gitRepo)
 
 println "--> Set system message "
 def env = System.getenv()
@@ -47,9 +47,7 @@ if ( env.containsKey('jenkins_image_version') ) {
   println "jenkins_image_version = ${env['jenkins_image_version']}"
   // jenkins_image_version set as env variable by the build process
   // Set it as a global variable in Jenkins to increase visibility
-  EnvironmentVariablesNodeProperty.Entry image_version = new EnvironmentVariablesNodeProperty.Entry('jenkins_image_version', env['jenkins_image_version']);
-  Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(image_version));
-  Jenkins.instance.save()
+  helpers.addGlobalEnvVariable(Jenkins, 'jenkins_image_version', env['jenkins_image_version'])
   systemMessage = "This Jenkins instance generated from code.\n " +
                   "Avoid any manual changes since they will be discarded with next deployment.\n " +
                   "Change source instead. Jenkins docker image version: ${env['jenkins_image_version']}\n\n" +

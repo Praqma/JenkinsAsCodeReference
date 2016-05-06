@@ -1,8 +1,10 @@
 import hudson.model.*
 import jenkins.*
 import jenkins.model.*
-import hudson.slaves.EnvironmentVariablesNodeProperty
-import hudson.slaves.EnvironmentVariablesNodeProperty.Entry
+
+// load helpers
+GroovyShell shell = new GroovyShell()
+def helpers = shell.parse(new File("/var/jenkins_home/init.groovy.d/helpers.groovy"))
 
 println "--> Setting up proxy"
 
@@ -19,10 +21,7 @@ for (e in System.getenv()) {
   }
   // Add proxy variables to the Jenkins global config - they are already available as env variables set
   // by Docker build but we want to increase visibility for the users
-  EnvironmentVariablesNodeProperty.Entry entry = new EnvironmentVariablesNodeProperty.Entry(e.key, e.value)
-  Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(entry))
-  Jenkins.instance.save()
-  println "Added global environment variable ${e.key}=${e.value}"
+  helpers.addGlobalEnvVariable(Jenkins, e.key, e.value)
   // Prepare GRADLE_OPTS variable
   switch (e.key.toUpperCase()) {
     case 'NO_PROXY':
@@ -46,10 +45,7 @@ for (e in System.getenv()) {
 
 // Set GRADLE_OPTS variable to configure proxy for Gradle since it does not respect http_proxy
 if ( gradle_opts != "" ) {
-  println "Setting up GRADLE_OPTS=${gradle_opts}"
-  EnvironmentVariablesNodeProperty.Entry entry = new EnvironmentVariablesNodeProperty.Entry("GRADLE_OPTS",gradle_opts);
-  Jenkins.instance.getGlobalNodeProperties().add(new EnvironmentVariablesNodeProperty(entry));
-  Jenkins.instance.save()
+  helpers.addGlobalEnvVariable(Jenkins, 'GRADLE_OPTS', gradle_opts)
 } else {
   println "GRADLE_OPTS is empty - no proxy settings to set. Do nothing"
 }
