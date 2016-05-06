@@ -15,14 +15,13 @@ for (e in System.getenv()) {
   if ( ! proxy_vars.contains(key) ) {
     continue
   }
-  if ( e.value == "" ) {
-    println "${e.key} defined but contains empty string. Skip it"
-    continue
-  }
   // Add proxy variables to the Jenkins global config - they are already available as env variables set
   // by Docker build but we want to increase visibility for the users
   helpers.addGlobalEnvVariable(Jenkins, e.key, e.value)
-  // Prepare GRADLE_OPTS variable
+  // Prepare GRADLE_OPTS variable. If variable is set to empty string then we do not add it to GRADLE_OPTS
+  if ( e.value == "" ) {
+    continue
+  }
   switch (e.key.toUpperCase()) {
     case 'NO_PROXY':
       println "No proxy configuration found ${e.key} = ${e.value}"
