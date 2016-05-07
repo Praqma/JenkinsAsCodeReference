@@ -36,20 +36,23 @@ helpers.addGlobalEnvVariable(Jenkins, 'default_branch', properties.gitBranch)
 
 println "--> Set system message "
 def env = System.getenv()
-if ( env.containsKey('jenkins_image_version') ) {
-  println "jenkins_image_version = ${env['jenkins_image_version']}"
-  // jenkins_image_version set as env variable by the build process
+if ( env.containsKey('master_image_version') ) {
+  // master_image_version set as env variable by the build process
   // Set it as a global variable in Jenkins to increase visibility
-  helpers.addGlobalEnvVariable(Jenkins, 'jenkins_image_version', env['jenkins_image_version'])
+  helpers.addGlobalEnvVariable(Jenkins, 'master_image_version', env['master_image_version'])
   systemMessage = "This Jenkins instance generated from code.\n " +
                   "Avoid any manual changes since they will be discarded with next deployment.\n " +
-                  "Change source instead. Jenkins docker image version: ${env['jenkins_image_version']}\n\n" +
+                  "Change source instead. Jenkins docker image version: ${env['master_image_version']}\n\n" +
                   "Update ${properties.gitRepo} to change configuration"
   println "Set system message to:\n ${systemMessage}"
   Jenkins.instance.setSystemMessage(systemMessage)
 } else {
-  prinln "Can't set system message - missing env variable jenkins_image_version"
+  prinln "Can't set system message - missing env variable master_image_version"
 }
+
+println "--> Set images name"
+helpers.addGlobalEnvVariable(Jenkins, 'master_image_name', properties.masterImageName)
+helpers.addGlobalEnvVariable(Jenkins, 'slave_image_name', properties.slaveImageName)
 
 // Set Global Slack configuration
 /* def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]
