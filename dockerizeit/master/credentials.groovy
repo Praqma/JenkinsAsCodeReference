@@ -1,4 +1,3 @@
-import java.util.Properties
 import java.lang.System
 import jenkins.*
 import hudson.model.*
@@ -10,22 +9,19 @@ import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
 import hudson.plugins.sshslaves.*
 
-// load helpers
+// Read properties
 def home_dir = System.getenv("JENKINS_HOME")
-GroovyShell shell = new GroovyShell()
-def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
-Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
+def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
 // Update Global Credetials setting with new user wirh ~/.ssh master key
 println "--> Create credentials for user jenkins with SSH private key from home directory"
 global_domain = Domain.global()
 credentials_store = Jenkins.instance.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
 creds = new BasicSSHUserPrivateKey(CredentialsScope.GLOBAL,
-                                   properties.jenkinsSSHUserId,
-                                   properties.jenkinsUserName,
+                                   properties.credentials.base.credentialsId,
+                                   properties.credentials.base.userId,
                                    new BasicSSHUserPrivateKey.UsersPrivateKeySource(),
                                    "",
                                    "")
 credentials_store.addCredentials(global_domain, creds)
-helpers.addGlobalEnvVariable(Jenkins, 'default_credentials', properties.jenkinsSSHUserId)
 

@@ -6,16 +6,14 @@ import javaposse.jobdsl.dsl.Job
 // This is a tmp hack. We should replace this job with pipeline
 // since pipeline jobs have better support for reading credentials id
 // from env variables
-Properties properties = new Properties()
-def home_dir = System.getenv("JENKINS_HOME")
-File propertiesFile = new File("$home_dir/jenkins.properties")
-if (propertiesFile.exists() && !propertiesFile.isDirectory()) { 
-  propertiesFile.withInputStream {
-    properties.load(it)
-  }
+def thr = Thread.currentThread()
+// if we are running in Jenkins
+def default_credentials = ""
+if (thr.hasProperty('executable')) {
+  def build = thr?.executable
+  default_credentials = build.parent.builds[0].properties.get("envVars")['default_credentials']
 } else {
-  // Assume we run gradle test
-     properties.setProperty 'jenkinsSSHUserId', 'jenkins'
+  default_credentials = "jenkins"
 }
 
 // One more tmp hack - assume empty http_proxy/https_proxy/no_proxy
@@ -36,14 +34,14 @@ cd $WORKSPACE/dockerizeit
 docker-compose build
 '''
 
-println "default credentials ${properties.jenkinsSSHUserId}"
+println "default credentials ${default_credentials}"
 
 Job review = new JobBuilder(this as DslFactory, "jenkins_as_a_code-review")
     .addLogRotator()
     .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew buildXml")
     .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew test")
     .addShellStep("$build_script")
-    .addScmBlock('$default_repo', "*/ready/**", properties.jenkinsSSHUserId)
+    .addScmBlock('$default_repo', "*/ready/**", default_credentials)
     .addScmPollTrigger()
     .addPretestedIntegration('$default_branch')
     .build()

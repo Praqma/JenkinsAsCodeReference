@@ -1,4 +1,3 @@
-import java.util.Properties
 import java.lang.System
 import jenkins.model.*
 import hudson.security.*
@@ -9,19 +8,18 @@ println "--> LDAPsecurity: Read properties from the file"
 def home_dir = System.getenv("JENKINS_HOME")
 GroovyShell shell = new GroovyShell()
 def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
-Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
+def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
-println "--> Configure LDAP"
-
-if(properties.isLDAP.toBoolean()) {
-    SecurityRealm ldap_realm = new LDAPSecurityRealm(properties.ldapServer,
-                                                     properties.ldapRootDN,
-                                                     properties.ldapUserSearchBase,
-                                                     properties.ldapUserSearch,
-                                                     properties.ldapGroupSearchBase,
-                                                     properties.ldapManagerDN,
-                                                     properties.ldapManagerPassword,
-                                                     properties.ldapInhibitInferRootDN.toBoolean())
-    Jenkins.instance.setSecurityRealm(ldap_realm)
-    Jenkins.instance.save()
+if(properties.ldap.enabled) {
+  println "--> Configure LDAP"
+  SecurityRealm ldap_realm = new LDAPSecurityRealm(properties.ldap.server,
+                                                   properties.ldap.rootDN,
+                                                   properties.ldap.userSearchBase,
+                                                   properties.ldap.userSearch,
+                                                   properties.ldap.groupSearchBase,
+                                                   properties.ldap.managerDN,
+                                                   properties.ldap.managerPassword,
+                                                   properties.ldap.inhibitInferRootDN)
+  Jenkins.instance.setSecurityRealm(ldap_realm)
+  Jenkins.instance.save()
 }

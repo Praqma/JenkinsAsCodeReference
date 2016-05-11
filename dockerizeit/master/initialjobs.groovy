@@ -1,4 +1,3 @@
-import java.util.Properties
 import java.lang.System
 import hudson.model.*
 import jenkins.model.*
@@ -27,7 +26,7 @@ if (job) {
 def home_dir = System.getenv("JENKINS_HOME")
 GroovyShell shell = new GroovyShell()
 def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
-Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
+def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
 println "--> Create seed-jod. The job will initiate all jobs from alljobs.dsl"
 def project = new FreeStyleProject(Jenkins.instance, jobName)
@@ -36,12 +35,12 @@ project.setAssignedLabel()
 // You can mount your local jobdsl repo to /home/jenkins-dsl-gradle - in this case this script
 // will use that one instead of pulling official repo from GitHub. Good for testing small changes!
 println "--> Configute Git access"
-def localGitPath = properties.localRepoPath
+def localGitPath = properties.seedjob.localRepoPath
 def localRepo = new File(localGitPath)
 List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
 if ( !localRepo.exists() ) {
   // default_repo will be set in globalconfig.groovy to point out path to this repo
-  dslGitrepoList.add(new UserRemoteConfig('$default_repo', "", "", properties.gitUserName))
+  dslGitrepoList.add(new UserRemoteConfig('$default_repo', "", "", properties.seedjob.gitUserName))
 } else {
   dslGitrepoList.add(new UserRemoteConfig("file://" + localGitPath + '/', "origin", "", null))
 }
@@ -55,13 +54,13 @@ project.setScm(dslGitSCM)
 
 println "--> Setup JobDSL build step"
 def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false",
-                                                                      targets=properties.dslTargetDirectory,
+                                                                      targets=properties.seedjob.dslTargetDirectory,
                                                                       scriptText=""),
                                             ignoreExisting=false,
                                             removedJobAction=RemovedJobAction.DELETE,
                                             removedViewAction=RemovedViewAction.DELETE,
                                             lookupStrategy=LookupStrategy.JENKINS_ROOT,
-                                            additionalClasspath=properties.dslAdditionalClasspath);
+                                            additionalClasspath=properties.seedjob.dslAdditionalClasspath);
 
 project.getBuildersList().add(jobDslBuildStep)
 project.addTrigger(new TimerTrigger("@midnight"))

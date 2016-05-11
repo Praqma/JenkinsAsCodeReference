@@ -1,23 +1,22 @@
-import java.util.Properties
 import java.lang.System
 import hudson.model.*
 import jenkins.model.*
 import java.net.InetAddress
 
-// load helpers
+// load helpers and read properties
 def home_dir = System.getenv("JENKINS_HOME")
 GroovyShell shell = new GroovyShell()
 def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
-Properties properties = helpers.readProperties("$home_dir/jenkins.properties")
+def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
-println "--> disabling master executors"
-Jenkins.instance.setNumExecutors(0)
+println "--> set number of executors on master to ${properties.global.numExecutorsOnMaster}"
+Jenkins.instance.setNumExecutors(properties.global.numExecutorsOnMaster)
 
-println "--> setting quite period to 3"
-Jenkins.instance.setQuietPeriod(3)
+println "--> set quite period to ${properties.global.scmQuietPeriod}"
+Jenkins.instance.setQuietPeriod(properties.global.scmQuietPeriod)
 
-println "--> setting checkout retry to 3"
-Jenkins.instance.setScmCheckoutRetryCount(3)
+println "--> set checkout retry to ${properties.global.scmCheckoutRetryCount}"
+Jenkins.instance.setScmCheckoutRetryCount(properties.global.scmCheckoutRetryCount)
 
 // Change it to the DNS name if you have it
 println "--> setting jenkins root url"
@@ -26,13 +25,11 @@ jlc = JenkinsLocationConfiguration.get()
 jlc.setUrl("http://$ip:8080")
 jlc.save()
 
-println "--> Set Global GIT configuration name to ${properties.globalConfigname} and email address to ${properties.globalConfigEmail}"
+println "--> Set Global GIT configuration name to ${properties.global.git.name} and email address to ${properties.global.git.email}"
 def inst = Jenkins.getInstance()
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
-desc.setGlobalConfigName(properties.globalConfigname)
-desc.setGlobalConfigEmail(properties.globalConfigEmail)
-helpers.addGlobalEnvVariable(Jenkins, 'default_repo', properties.gitRepo)
-helpers.addGlobalEnvVariable(Jenkins, 'default_branch', properties.gitBranch)
+desc.setGlobalConfigName(properties.global.git.name)
+desc.setGlobalConfigEmail(properties.global.git.email)
 
 println "--> Set system message "
 def env = System.getenv()
@@ -43,16 +40,17 @@ if ( env.containsKey('master_image_version') ) {
   systemMessage = "This Jenkins instance generated from code.\n " +
                   "Avoid any manual changes since they will be discarded with next deployment.\n " +
                   "Change source instead. Jenkins docker image version: ${env['master_image_version']}\n\n" +
-                  "Update ${properties.gitRepo} to change configuration"
+                  "Update ${properties.seedjob.gitRepo} to change configuration"
   println "Set system message to:\n ${systemMessage}"
   Jenkins.instance.setSystemMessage(systemMessage)
 } else {
   prinln "Can't set system message - missing env variable master_image_version"
 }
 
-println "--> Set images name"
-helpers.addGlobalEnvVariable(Jenkins, 'master_image_name', properties.masterImageName)
-helpers.addGlobalEnvVariable(Jenkins, 'slave_image_name', properties.slaveImageName)
+println "--> Set global env variables"
+properties.global.variables.each { key, value ->
+  helpers.addGlobalEnvVariable(Jenkins, key, value)
+}
 
 // Set Global Slack configuration
 /* def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]
