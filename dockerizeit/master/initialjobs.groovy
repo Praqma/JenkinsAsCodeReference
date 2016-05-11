@@ -14,59 +14,47 @@ import com.cloudbees.plugins.credentials.domains.*
 import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
 import hudson.plugins.sshslaves.*
 
-def jobName = 'jenkins_as_a_code-seedjob'
 def instance = Jenkins.getInstance()
-
-println "--> Remove seed job if already exists"
-job = Jenkins.instance.getJob(jobName)
-if (job) {
-  job.delete()
-}
-
 def home_dir = System.getenv("JENKINS_HOME")
 GroovyShell shell = new GroovyShell()
 def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
 def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
-println "--> Create seed-jod. The job will initiate all jobs from alljobs.dsl"
-def project = new FreeStyleProject(Jenkins.instance, jobName)
-project.setAssignedLabel()
+properties.seedjobs.each {
+  println "--> Remove ${it.value.name} seed job if already exists"
+  def job = Jenkins.instance.getJob(it.value.name)
+  if (job) { job.delete() }
+  println "--> Create ${it.value.name} seed jod"
+  def project = new FreeStyleProject(Jenkins.instance, it.value.name)
+  project.setAssignedLabel()
+  List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
+  dslGitrepoList.add(new UserRemoteConfig(it.value.repo, "", "", it.value.credentials))
+  List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec(it.value.branch))
+  GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
+                                dslGitBranches,
+                                false,
+                                null, null, null, null);
+  project.setScm(dslGitSCM)
+  def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false",
+                                                                      targets=it.value.path,
+                                                                      scriptText=""),
+                                                                      ignoreExisting=false,
+                                                                      removedJobAction=RemovedJobAction.DELETE,
+                                                                      removedViewAction=RemovedViewAction.DELETE,
+                                                                      lookupStrategy=LookupStrategy.JENKINS_ROOT,
+                                                                      additionalClasspath=it.value.classpath);
 
-// You can mount your local jobdsl repo to /home/jenkins-dsl-gradle - in this case this script
-// will use that one instead of pulling official repo from GitHub. Good for testing small changes!
-println "--> Configute Git access"
-def localGitPath = properties.seedjob.localRepoPath
-def localRepo = new File(localGitPath)
-List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
-if ( !localRepo.exists() ) {
-  // default_repo will be set in globalconfig.groovy to point out path to this repo
-  dslGitrepoList.add(new UserRemoteConfig('$default_repo', "", "", properties.seedjob.gitUserName))
-} else {
-  dslGitrepoList.add(new UserRemoteConfig("file://" + localGitPath + '/', "origin", "", null))
+  project.getBuildersList().add(jobDslBuildStep)
+  project.addTrigger(new TimerTrigger("@midnight"))
+  it.value.parameters.each { key, value ->
+    helpers.addBuildParameter(project, key, value)
+  }
+  project.save()
 }
 
-List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec('$default_branch'))
-GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
-        dslGitBranches,
-        false,
-        null, null, null, null);
-project.setScm(dslGitSCM)
-
-println "--> Setup JobDSL build step"
-def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false",
-                                                                      targets=properties.seedjob.dslTargetDirectory,
-                                                                      scriptText=""),
-                                            ignoreExisting=false,
-                                            removedJobAction=RemovedJobAction.DELETE,
-                                            removedViewAction=RemovedViewAction.DELETE,
-                                            lookupStrategy=LookupStrategy.JENKINS_ROOT,
-                                            additionalClasspath=properties.seedjob.dslAdditionalClasspath);
-
-project.getBuildersList().add(jobDslBuildStep)
-project.addTrigger(new TimerTrigger("@midnight"))
-project.save()
 Jenkins.instance.reload()
 
-println "--> Trigger jobs generation"
-job = Jenkins.instance.getJob(jobName)
-hudson.model.Hudson.instance.queue.schedule(job)
+properties.seedjobs.each {
+  println "--> Schedule ${it.value.name} seed jod"
+  Jenkins.instance.getJob(it.value.name).scheduleBuild()
+}

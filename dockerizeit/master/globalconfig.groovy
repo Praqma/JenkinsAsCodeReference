@@ -40,7 +40,7 @@ if ( env.containsKey('master_image_version') ) {
   systemMessage = "This Jenkins instance generated from code.\n " +
                   "Avoid any manual changes since they will be discarded with next deployment.\n " +
                   "Change source instead. Jenkins docker image version: ${env['master_image_version']}\n\n" +
-                  "Update ${properties.seedjob.gitRepo} to change configuration"
+                  "Update ${properties.global.variables.default_repo} to change configuration"
   println "Set system message to:\n ${systemMessage}"
   Jenkins.instance.setSystemMessage(systemMessage)
 } else {
