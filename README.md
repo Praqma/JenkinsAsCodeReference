@@ -48,6 +48,8 @@ mkdir -p $HOME/jenkins-backup/registry
 chmod -R rwx+ugo $HOME/jenknis-backup
 ```
 
+* Make sure that you have `$HOME/.ssh` directory with the ssh keys for the user that can access GitHub or your own Git hosting. Docker compose will mount `$HOME/.ssh` to the Jenkins master container so it can create default credentials from it.
+
 #### First start
 Step into the dockerizeit directory and run docker compose. Important! If you run docker compose from the different directory then make sure to use -p dockerizeit option for the docker compose. There are scripts that rely on  services to be called dockerizeit_jmaster_1 and etc.
 
