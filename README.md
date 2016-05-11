@@ -77,7 +77,7 @@ up -d
 
 #### Adjusting configuration
 
-Jenkins configured on startup using Groovy scripts from the dockerizeit/master directory. All those scripts read configuration parameters from [dockerizeit/master/jenkins.properties file](dockerizeit/master/jenkins.properties file). So if you would like to adjust your instance parameters then only change them in jenkins.properties - no Groovy hacking needed. If you are missing something, then you are very welcome to contribute this feature.
+Jenkins configured on startup using Groovy scripts from the dockerizeit/master directory. All those scripts read configuration parameters from [dockerizeit/master/jenkins.properties](dockerizeit/master/jenkins.properties) file. So if you would like to adjust your instance parameters then only change them in jenkins.properties - no Groovy hacking needed. If you are missing something, then you are very welcome to contribute this feature.
 
 #### Detailed scripts description
 
