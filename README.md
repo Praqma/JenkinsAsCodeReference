@@ -1,16 +1,109 @@
-# JenkinsAsCodeReference
+# Jenkins as Code template
 
 ### Description
-This repository is intended for the reference Jenkins configuration as code as well as JobDSL library
+The intention of this project is to create the easily configurable template, summarize the current best thinking and create unification for the stateless Jenkins deployments.
 
 ### Getting started
+
+#### Requirements
+
+* Linux host
+* Docker 1.11
+* Docker Compose 1.7
+* Make sure that you are using umask 022 or similar since during the build process configuration files will be copied to the Jenkins container as a root user but Jenkins runs by another user, so we need to make sure that those files are readable for group and others.
+
+#### Preparations
+
+* Clone this repository
+
+```
+git clone https://github.com/Praqma/JenkinsAsCodeReference.git
+```
+
+* Set proxy variables. You have to do it even if you are not using a proxy because there is [a bug in docker-compose](https://github.com/docker/compose/issues/3281) which makes args return None instead of empty string. Because of that, if you don't use proxy, you have to define empty environment variables http_proxy, https_proxy, no_proxy. Otherwise you would have those variables set to point out your proxy settings
+
+```
+export http_proxy=<empty or proxy address>
+export https_proxy=<empty or proxy address>
+export no_proxy=<empty or proxy address>
+```
+
+or
+
+```
+cat > ~/.bashrc <<- EOM
+export http_proxy=<empty or proxy address>
+export https_proxy=<empty or proxy address>
+export no_proxy=<empty or proxy address>
+EOM
+source ~/.bashrc
+```
+
+* Create backup directories - they will be used to store build history, Gradle cache, and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
+
+```
+mkdir -p $HOME/jenkins-backup/jobs
+mkdir -p $HOME/jenkins-backup/slave/gradle
+mkdir -p $HOME/jenkins-backup/registry
+chmod -R rwx+ugo $HOME/jenknis-backup
+```
+
+#### First start
+Step into the dockerizeit directory and run docker compose. Important! If you run docker compose from the different directory then make sure to use -p dockerizeit option for the docker compose. There are scripts that rely on  services to be called dockerizeit_jmaster_1 and etc.
+
+```
+cd dockerizeit
+docker-compose up -d --build
+```
+
+#### Restart/Start
+
+Download docker-compose.yml attached to the latest deployment pipeline execution and run it using docker-compose
+
+```
+wget <docker compose file url>
+docker-compose -p dockerizeit up -d
+```
+
+or pick it from the backup directory
+
+```
+docker-compose -f $HOME/jenkins-backup/jobs/jenkins_as_a_code-pipeline/builds/lastSuccessfulBuild/archive/docker-compose.yml \
+-p dockerizeit \
+up -d
+```
+
+### Configuration
+
+#### Adjusting configuration
+
+Jenkins configured on startup using Groovy scripts from the dockerizeit/master directory. All those scripts read configuration parameters from [dockerizeit/master/jenkins.properties file](dockerizeit/master/jenkins.properties file). So if you would like to adjust your instance parameters then only change them in jenkins.properties - no Groovy hacking needed. If you are missing something, then you are very welcome to contribute this feature.
+
+#### Detailed scripts description
+
 TBD
 
-### Detailed description
-TBD
+#### Upgrading plugins, removing/installing plugins
+
+Plugins configuration managed through the master/plugins.txt. To update its content first go to Manage Jenkins -> Manage Plugins and install necessary updates, uninstall plugins and etc.
+When ready run the following in Manage Jenkins -> Script console and then copy output to plugins.txt
+
+```
+plugins = [:]
+jenkins.model.Jenkins.instance.getPluginManager().getPlugins().each {plugins << ["${it.getShortName()}":"${it.getVersion()}"]}
+plugins.sort().each() { println "${it.key}:${it.value}"}
+```
 
 ### Roadmap and contributions
-TBD
 
-### Project progress
-You can see project status on [its Waffle board](https://waffle.io/Praqma/JenkinsAsCodeReference)
+#### Workflow
+Issues labeling follows Pragmatic workflow described [here](http://www.praqma.com/stories/a-pragmatic-workflow/)
+Describe your idea as ticket, make sure to put `Action - needs grooming` label and let's discuss it together
+
+#### Contributions verification
+We do have [Travis CI job](https://travis-ci.org/Praqma/JenkinsAsCodeReference) running for all branches so make sure it goes green for all your contributions.
+You can also use review job created on the startup. This job relies on principals described in [this article](http://www.josra.org/blog/An-automated-git-branching-strategy.html)
+
+#### Project progress
+You can see project status on [its Waffle board](https://waffle.io/Praqma/JenkinsAsCodeReference).
+At some point of time, we will kick off maintainers meetings. Stay tuned
