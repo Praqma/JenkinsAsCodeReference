@@ -77,24 +77,7 @@ up -d
 
 ### Configuration
 
-#### Adjusting configuration
-
-Jenkins configured on startup using Groovy scripts from the dockerizeit/master directory. All those scripts read configuration parameters from [dockerizeit/master/jenkins.properties](dockerizeit/master/jenkins.properties) file. So if you would like to adjust your instance parameters then only change them in jenkins.properties - no Groovy hacking needed. If you are missing something, then you are very welcome to contribute this feature.
-
-#### Detailed scripts description
-
-TBD
-
-#### Upgrading plugins, removing/installing plugins
-
-Plugins configuration managed through the master/plugins.txt. To update its content first go to Manage Jenkins -> Manage Plugins and install necessary updates, uninstall plugins and etc.
-When ready run the following in Manage Jenkins -> Script console and then copy output to plugins.txt
-
-```
-plugins = [:]
-jenkins.model.Jenkins.instance.getPluginManager().getPlugins().each {plugins << ["${it.getShortName()}":"${it.getVersion()}"]}
-plugins.sort().each() { println "${it.key}:${it.value}"}
-```
+Find detailed description of configuration scripts and configuration file [here](dockerizeit/master/README.md)
 
 ### Roadmap and contributions
 
