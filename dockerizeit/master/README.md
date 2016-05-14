@@ -153,6 +153,33 @@ seedjobs {
 ```
 
 To plugin your repo just add one more section like the one above - script will iterate over all sections, create jobs, and trigger them.
+See example below
+
+```
+seedjobs {
+  jenkins {
+    name = "jenkins_as_a_code-seedjob"
+    repo = "git@github.com:Praqma/JenkinsAsCodeReference.git"
+    branch = "master"
+    credentials = "jenkins"
+    path = "jobdsl-gradle/src/jobs/groovy/*.groovy"
+    classpath = "jobdsl-gradle/src/main/groovy"
+    parameters {
+    }
+  }
+  roadshow {
+    name = "praqma-training.roadshow.seed"
+    repo = "git@github.com:praqma-training/roadshow-dsl.git"
+    branch = "master"
+    credentials = "jenkins"
+    path = "*.groovy"
+    classpath = ""
+    parameters {
+      GITHUB_USER = "praqma-training"
+    }
+  }
+}
+```
 
 ### Artifactory
 
