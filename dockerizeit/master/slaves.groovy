@@ -36,7 +36,7 @@ properties.slaves.each {
       throw new UnsupportedOperationException("${it.value.type} slave type is not supported!")
       break
     }
-    DumbSlave dumb = new DumbSlave(it.key,                         // Agent name
+    DumbSlave dumb = new DumbSlave(it.value.name,                  // Agent name
                                    it.value.description,           // Agent description
                                    it.value.remoteFS,              // Workspace on the agent's computer
                                    it.value.executors,             // Number of executors

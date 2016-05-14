@@ -74,6 +74,7 @@ slaves {
   // Long version
   sshTest {
    type = "ssh"
+   name = "ssh-test"
    description = ""
    remoteFS = "/var/jenkins/slave"
    executors = "5" // Have to be string because of constructor
@@ -95,6 +96,7 @@ slaves {
   // short version
   sshTest2 {
    type = "ssh"
+   name	= "ssh-test2"
    description = ""
    remoteFS = "/var/jenkins/slave"
    executors = "5"
@@ -114,6 +116,7 @@ JNLP slaves configuration example
 slaves {
   jnlpTest {
    type = "jnlp"
+   name	= "jnlp-test"
    description = ""
    remoteFS = "/var/jenkins/slave"
    executors = "5"
