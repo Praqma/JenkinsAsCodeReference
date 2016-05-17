@@ -4,12 +4,8 @@ import hudson.security.*
 import org.jenkinsci.plugins.*
 import hudson.model.*
 
-println "--> Matrix-Based security: Read properties from the file"
-
 def home_dir = System.getenv("JENKINS_HOME")
-GroovyShell shell = new GroovyShell()
-def helpers = shell.parse(new File("$home_dir/init.groovy.d/helpers.groovy"))
-def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
+def properties = new ConfigSlurper().parse(new File("$home_dir/security.properties").toURI().toURL())
 
 if(properties.matrixbasedsecurity.enabled){
   println "--> Configure Matrix-Based security"

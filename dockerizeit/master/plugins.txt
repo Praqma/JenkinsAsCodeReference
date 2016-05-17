@@ -1,4 +1,5 @@
 ace-editor:1.1
+active-directory:1.45
 ansicolor:0.4.2
 ant:1.2
 antisamy-markup-formatter:1.3

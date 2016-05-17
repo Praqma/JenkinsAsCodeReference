@@ -217,10 +217,41 @@ GRADLE_OPTS="-Dhttp.nonProxyHosts=... -Dhttp.proxyHost=... -Dhttp.proxyPort=... 
 
 If proxy environment variables are set to empty string, then GRADLE_OPTS won't be set
 
-### LDAP
+### Security configuration
 
-TBD
+Security configuration stored in the separate file - [security.properties](security.properies)
 
-### Matrix-based security
+#### LDAP
+
+LDAP configuration example. Fields name match [LDAPSecurityRealm](https://github.com/jenkinsci/ldap-plugin/blob/0da2fef8feb9e480e303a7dbd03241f880c82235/src/main/java/hudson/security/LDAPSecurityRealm.java) constructor.
+
+ldap {
+  enabled = true
+  server = "ldap://1.2.3.4"
+  rootDN = "dc=foo,dc=com"
+  userSearchBase = "cn=users,cn=accounts"
+  userSearch =
+  groupSearchBase =
+  managerDN = "uid=serviceaccount,cn=users,cn=accounts,dc=foo,dc=com"
+  managerPassword = "password"
+  inhibitInferRootDN = false
+}
+
+#### AD
+
+AD configuration example. Fields name match [ActiveDirectorySecurityRealm](https://github.com/jenkinsci/active-directory-plugin/blob/3862baf8bcd3a88703c9ea98b7b947d9ee34d16d/src/main/java/hudson/plugins/active_directory/ActiveDirectorySecurityRealm.java) constructor.
+
+```
+ad {
+  enabled = true
+  domain = "domain.com"
+  site = null
+  bindName = null
+  bindPassword = null
+  server = null
+}
+```
+
+#### Matrix-based security
 
 TBD
