@@ -12,7 +12,7 @@ node {
    sh 'cd jobdsl-gradle && ./gradlew test'
 
    stage 'Build master Docker image'
-   sh 'cd dockerizeit/master && docker build --build-arg master_image_version=${master_image_name}:$(git describe --tags) --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t ${master_image_name}:$(git describe --tags) .'
+   sh 'cd dockerizeit/master && docker build --build-arg master_image_version=${master_image_name}:$(git describe --tags) --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy --build-arg JAVA_OPTS -t ${master_image_name}:$(git describe --tags) .'
    sh 'docker tag ${master_image_name}:$(git describe --tags) ${master_image_name}:latest'
 
    stage 'Build slave Docker image'

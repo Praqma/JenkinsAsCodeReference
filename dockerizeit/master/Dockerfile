@@ -6,6 +6,8 @@ FROM jenkins:1.651.1-alpine
 ENV http_proxy ${http_proxy:-}
 ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
+ARG JAVA_OPTS
+ENV JAVA_OPTS ${JAVA_OPTS:-}
 
 # Define build argument and env variable master_image_version
 # Use to pass info about Jenkins version so it can be represented

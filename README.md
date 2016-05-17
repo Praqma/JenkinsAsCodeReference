@@ -26,6 +26,7 @@ git clone https://github.com/Praqma/JenkinsAsCodeReference.git
 export http_proxy=<empty or proxy address>
 export https_proxy=<empty or proxy address>
 export no_proxy=<empty or proxy address>
+export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<proxy port> -Dhttp.nonProxyHosts=localhost,127.0.0.1,*.whatever.com -Dhttp.proxyHost=<proxy address> -Dhttp.proxyPort=<proxy port>
 ```
 
 or
@@ -35,6 +36,7 @@ cat > ~/.bashrc <<- EOM
 export http_proxy=<empty or proxy address>
 export https_proxy=<empty or proxy address>
 export no_proxy=<empty or proxy address>
+export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<proxy port> -Dhttp.nonProxyHosts=localhost,127.0.0.1,*.whatever.com -Dhttp.proxyHost=<proxy address> -Dhttp.proxyPort=<proxy port>
 EOM
 source ~/.bashrc
 ```
