@@ -209,13 +209,7 @@ artifactory {
 ### Proxy
 
 Configured by the [proxy.groovy](proxy.groovy)
-The script will read http_proxy, https_proxy, no_proxy environment variables (set during the container build. See [Dockerfile](Dockerfile) for more details) and define then as Jenkins global variables. Also, it will set GRADLE_OPTS environment variable to something like
-
-```
-GRADLE_OPTS="-Dhttp.nonProxyHosts=... -Dhttp.proxyHost=... -Dhttp.proxyPort=... -Dhttps.proxyHost=... -Dhttps.proxyPort=..."
-```
-
-If proxy environment variables are set to empty string, then GRADLE_OPTS won't be set
+The script will read http_proxy, https_proxy, no_proxy, JAVA_OPTS environment variables (set during the container build. See [Dockerfile](Dockerfile) for more details) and define then as Jenkins global variables.
 
 ### Security configuration
 
