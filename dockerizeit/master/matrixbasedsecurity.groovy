@@ -12,8 +12,6 @@ if(properties.matrixbasedsecurity.enabled){
 
   def instance = Jenkins.getInstance()
   def anonymous = hudson.security.ACL.ANONYMOUS_USERNAME
-  def hudsonRealm = new HudsonPrivateSecurityRealm(false)
-  instance.setSecurityRealm(hudsonRealm)
 
   def strategy = new GlobalMatrixAuthorizationStrategy()
   strategy.add(Jenkins.READ, anonymous)
