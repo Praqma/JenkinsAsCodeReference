@@ -243,6 +243,10 @@ ad {
   bindName = null
   bindPassword = null
   server = null
+  // See [GroupLookupStrategy.java](https://github.com/jenkinsci/active-directory-plugin/blob/8817f035e15d33e390367aa7c664e0cfbb04d7cf/src/main/java/hudson/plugins/active_directory/GroupLookupStrategy.java) for the list of available options.
+  // We can't use direct class resolution like hudson.plugins.active_directory.GroupLookupStrategy.RECURSIVE
+  // because GroupLookupStrategy is a private enum
+  groupLookupStrategy = RECURSIVE
 }
 ```
 

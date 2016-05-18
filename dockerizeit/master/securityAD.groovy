@@ -11,7 +11,8 @@ if(properties.ad.enabled) {
                                                                         properties.ad.site,
                                                                         properties.ad.bindName,
                                                                         properties.ad.bindPassword,
-                                                                        properties.ad.server)
+                                                                        properties.ad.server,
+                                                                        GroupLookupStrategy.valueOf(properties.ad.groupLookupStrategy.toString().toUpperCase()))
   Jenkins.instance.setSecurityRealm(realm)
   Jenkins.instance.save()
 }
