@@ -31,7 +31,7 @@ def addBuildParameter(FreeStyleProject job, String key, String value) {
     else {
         if ( (parametersDefinitionProperty.parameterDefinitions.find{ it.name == key }) == null ) {
           println "--> add job parameter ${key} = ${value} to the job ${job}"
-          parametersDefinitionProperty.parameterDefinitions.add(newParam)
+          parametersDefinitionProperty.parameterDefinitions.add(param)
         } else {
           println "${job} already have parameter ${key}. Skip it"
         }
