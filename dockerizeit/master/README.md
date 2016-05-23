@@ -187,22 +187,23 @@ seedjobs {
 ### Artifactory
 
 Configured by the [artifactory.groovy](artifactory.groovy)
-The script will read the following section from the [jenkins.properties](jenkins.properties) and create corresponding data structure
+The script will read the following section from the [jenkins.properties](jenkins.properties) and create corresponding data structure.
+Current implementation relies on the credentials, i.e. you have to create credentials instead of specifying login and password in Artifactory config.
+In this way, we are trying to avoid having plain passwords in the configuration files.
+You have a possibility to configure multiple servers by adding more closures.
 
 ```
 artifactory {
-  enabled = true \\ Skip configuration if set to false
-  logInUser = "admin"
-  logInPassw = "password"
-  deployerName = "jenkins"
-  overridingCredentials = false
-  resolverUser =
-  resolverPwd =
-  resolverName = "resolver"
-  connectionTimeOut = 300
-  serverName = "do-server"
-  serverUrl = "http://188.166.117.16:8081/artifactory"
-  bypassProxy = false
+  server1 {
+    enabled = true
+    deployerCredentialsId = "artifactory"
+    resolverCredentialsId = "artifactory"
+    overridingCredentials = false
+    connectionTimeOut = 300
+    serverName = "my-lovely-artifactory"
+    serverUrl = "http://1.1.1.1:8081/artifactory"
+    bypassProxy = false
+  }
 }
 ```
 
