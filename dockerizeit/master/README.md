@@ -251,6 +251,29 @@ ad {
 }
 ```
 
+#### Jenkins own database
+
+Add the followning snippet to [security.properties](security.properties) in order to tell Jenkins to use its own database for the user management.
+There is no support for sign up in UI because Jenkins configuration will be wiped out during redeployment, i.e. user database is not preserved.
+Preferably avoid this type of security realm and use 3rd party service for that - think LDAP, Unix users database, GitHub, Google etc.
+Also, consider a need for those users - do you really need them if you anyway control configuration through the git repo. Well, unless this is a test instance facing public network
+
+```
+owndb {
+  enabled = true
+  users {
+    user1 {
+      userId = "jenkins"
+      path = "/var/jenkins_home/.ssh/.password"
+    }
+    user2 {
+      userId = "hudson"
+      path = "/var/jenkins_home/.ssh/.password"
+    }
+  }
+}
+```
+
 #### Matrix-based security
 
 TBD
