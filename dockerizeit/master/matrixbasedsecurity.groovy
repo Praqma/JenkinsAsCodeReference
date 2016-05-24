@@ -7,6 +7,10 @@ import hudson.model.*
 def home_dir = System.getenv("JENKINS_HOME")
 def properties = new ConfigSlurper().parse(new File("$home_dir/security.properties").toURI().toURL())
 
+// START:  Add hack to create a new user to have administer
+
+
+// END
 if(properties.matrixbasedsecurity.enabled){
   println "--> Configure Matrix-Based security"
 
