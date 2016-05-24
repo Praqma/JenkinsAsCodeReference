@@ -16,6 +16,9 @@ if(properties.matrixbasedsecurity.enabled){
   def strategy = new GlobalMatrixAuthorizationStrategy()
   strategy.add(Jenkins.READ, anonymous)
   strategy.add(Jenkins.ADMINISTER, "authenticated")
+  // Add permissions for anonymous slaves to connect to the master 
+  strategy.add(Computer.CONNECT, anonymous)
+  strategy.add(Computer.CREATE, anonymous)
   instance.setAuthorizationStrategy(strategy)
 
   instance.save()
