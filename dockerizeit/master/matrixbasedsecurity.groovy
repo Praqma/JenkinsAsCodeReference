@@ -5,25 +5,18 @@ import org.jenkinsci.plugins.*
 import hudson.model.*
 
 def home_dir = System.getenv("JENKINS_HOME")
-def properties = new ConfigSlurper().parse(new File("$home_dir/security.properties").toURI().toURL())
+def properties = new ConfigSlurper().parse(new File("${home_dir}/security.properties").toURI().toURL())
+// To set permissions use list of Permission only from hudson.model.* 
+def userProps = new ConfigSlurper().parse(new File("${home_dir}/permissions.properties").toURI().toURL())
 
-// START:  Add hack to create a new user to have administer
-
-
-// END
 if(properties.matrixbasedsecurity.enabled){
-  println "--> Configure Matrix-Based security"
+	println "--> Configure Matrix-Based security"
+	def strategy = new GlobalMatrixAuthorizationStrategy()
 
-  def instance = Jenkins.getInstance()
-  def anonymous = hudson.security.ACL.ANONYMOUS_USERNAME
-
-  def strategy = new GlobalMatrixAuthorizationStrategy()
-  strategy.add(Jenkins.READ, anonymous)
-  strategy.add(Jenkins.ADMINISTER, "authenticated")
-  // Add permissions for anonymous slaves to connect to the master 
-  strategy.add(Computer.CONNECT, anonymous)
-  strategy.add(Computer.CREATE, anonymous)
-  instance.setAuthorizationStrategy(strategy)
-
-  instance.save()
+	userProps.each() { key, value ->
+		value.permissions.each() { strategy.add(it, value.userId)}
+	}
+	
+	Jenkins.instance.setAuthorizationStrategy(strategy)
+	Jenkins.instance.save()
 }
