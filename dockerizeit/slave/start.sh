@@ -12,7 +12,7 @@ if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
   PARAMS="$PARAMS -executors ${NUM_OF_EXECUTORS:-2}"
 
   # Set labels to slave
-  PARAMS="$PARAMS -labels \"linux\" -labels \"debian\" -labels \"jessie\" -labels \"java\" -labels \"docker\""
+  PARAMS="$PARAMS -labels \"linux\" -labels \"alpine\" -labels \"3.3\" -labels \"java\" -labels \"docker\" -labels \"swarm\" -labels \"utility-slave\""
 
   echo Running java $JAVA_OPTS -jar $JAR -fsroot $HOME/slave $PARAMS "$@"
   exec java $JAVA_OPTS -jar $JAR -fsroot $HOME $PARAMS "$@"

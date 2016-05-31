@@ -1,4 +1,4 @@
-node {
+node(env.utility_slave) {
    stage 'Checkout'
    checkout([$class: 'GitSCM',
              branches: [[name: "*/${env.default_branch}"]],

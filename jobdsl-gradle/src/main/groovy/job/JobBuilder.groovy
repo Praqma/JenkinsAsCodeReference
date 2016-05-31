@@ -62,7 +62,7 @@ public class JobBuilder {
 
 
     /**
-     * Use this function to add shell step to the job configuration
+     * Use this function to add Gradle build step to the job configuration
      *
      * @String targets   Gradle task to execute
      * @String dir       Directory with Gradle files
@@ -81,6 +81,16 @@ public class JobBuilder {
                 }
             }
         }
+        this
+    }
+
+    /**
+     * Set an agent selector
+     *
+     * @String  nodeLabel Nodes to pick
+     */
+    public JobBuilder addLabel(String nodeLabel) {
+        job.label(nodeLabel)
         this
     }
 
