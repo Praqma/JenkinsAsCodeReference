@@ -38,8 +38,8 @@ println "default credentials ${default_credentials}"
 
 Job review = new JobBuilder(this as DslFactory, "jenkins_as_a_code-review")
     .addLogRotator()
-    .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew buildXml")
-    .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew test")
+    .addGradleStep(["buildXMl"], "jobdsl-gradle")
+    .addGradleStep(["test"], "jobdsl-gradle")
     .addShellStep("$build_script")
     .addShellStep("cd \$WORKSPACE/dockerizeit; ./generate-compose.py --debug --file docker-compose.yml --jmaster-image test-image --jmaster-version test-version --jslave-image test-image --jslave-version test-version && cat docker-compose.yml && git checkout HEAD docker-compose.yml")
     .addShellStep("cd \$WORKSPACE/dockerizeit/munchausen; cp ../docker-compose.yml .; docker build --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t munchausen .")

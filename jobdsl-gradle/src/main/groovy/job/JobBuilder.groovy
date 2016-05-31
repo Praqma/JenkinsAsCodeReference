@@ -62,6 +62,29 @@ public class JobBuilder {
 
 
     /**
+     * Use this function to add shell step to the job configuration
+     *
+     * @String targets   Gradle task to execute
+     * @String dir       Directory with Gradle files
+     * @String otpions   Switches to use
+     */
+    public JobBuilder addGradleStep(List<String> targets, String dir, List<String> options = [], boolean debug = false) {
+        if (debug) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        } else {
+            job.steps() {
+                gradle {
+                    targets.each() { tasks(it) }
+                    options.each() { switches(it) }
+                    rootBuildScriptDir(dir)
+                }
+            }
+        }
+        this
+    }
+
+    /**
      * Use this function to add	pipeline script	definition as a file
      *
      * @String  script	Script to add
