@@ -65,7 +65,7 @@ credentials {
 
 ### Slaves
 
-Slaves created by the [credentials.groovy](slaves.groovy)
+Slaves created by the [slaves.groovy](slaves.groovy)
 The script will read [slaves.properties](slaves.properties) and create corresponding slaves.
 ssh slaves configuration
 
@@ -271,6 +271,20 @@ owndb {
       path = "/var/jenkins_home/.ssh/.password"
     }
   }
+}
+```
+
+#### Google Login
+
+[Google Login plugin](https://wiki.jenkins-ci.org/display/JENKINS/Google+Login+Plugin) allows to login using Google domain credentials.
+Make sure to create file with the secret before enabling corresponding section
+
+```
+googlelogin {
+  enabled = false
+  clientId = "someId"
+  clientSecret = "/var/jenkins_home/.ssh/.googlesecret"
+  domain = "domain.com"
 }
 ```
 
