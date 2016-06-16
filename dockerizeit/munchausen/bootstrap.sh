@@ -12,4 +12,4 @@ echo "Stop master and slave"
 docker stop dockerizeit_jmaster_1 dockerizeit_jslave_1
 
 echo "Start new master and slave container using provided docker-compose.yml"
-docker-compose -p dockerizeit up -d
+docker-compose -p dockerizeit up -d --force-recreate
