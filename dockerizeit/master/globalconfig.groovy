@@ -20,9 +20,14 @@ Jenkins.instance.setScmCheckoutRetryCount(properties.global.scmCheckoutRetryCoun
 
 // Change it to the DNS name if you have it
 println "--> setting jenkins root url"
-def ip = InetAddress.localHost.getHostAddress()
 jlc = JenkinsLocationConfiguration.get()
-jlc.setUrl("http://$ip:8080")
+if (properties.global.jenkinsRootUrl) {
+  println "--> ${properties.global.jenkinsRootUrl}"
+  jlc.setUrl(properties.global.jenkinsRootUrl)
+} else {
+  def ip = InetAddress.localHost.getHostAddress()
+  jlc.setUrl("http://$ip:8080")
+}
 jlc.save()
 
 println "--> Set Global GIT configuration name to ${properties.global.git.name} and email address to ${properties.global.git.email}"
