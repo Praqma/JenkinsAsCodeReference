@@ -62,7 +62,39 @@ credentials {
   }
 }
 ```
+### Global section
 
+Some global properties in [jenkins.properties](jenkins.properties) are set through [globalconfig](globalconfig.groovy).
+
+```
+global {
+  // How many executors you want on master
+  numExecutorsOnMaster = 0
+  // Which address is used to axxess your Jenkins instance
+  // http://jenkins.my.company:8080
+  // left empty: http://$ip:8080
+  jenkinsRootUrl = ""
+  // Specify the administrator email
+  / used as return address in email notofications
+  jenkinsAdminEmail = "Jenkins <no-reply@yourcompany.com>"
+  scmQuietPeriod = 3
+  scmCheckoutRetryCount = 3
+  git {
+    // Jenkins in git
+    name = "Jenkins Jenkinsson"
+    email = "no-reply@yourcompany.com"
+  }
+  // Some default variables to use in job configurations.
+  variables {
+    default_credentials = "${credentials.base.credentialsId}"
+    default_repo = "git@github.com:Praqma/JenkinsAsCodeReference.git"
+    default_branch = "master"
+    utility_slave = "utility-slave"
+    master_image_name = "${images.masterImageName}"
+    slave_image_name = "${images.slaveImageName}"
+  }
+}
+```
 ### Slaves
 
 Slaves created by the [slaves.groovy](slaves.groovy)
@@ -290,7 +322,7 @@ googlelogin {
 
 #### Matrix-based security
 
-Add the following snippet to [security.properties](security.properties) to appoint users access rights for matrix-based security model. For example, to allow anonymous users create a slave connection Jenkins master, or give authenticated user administrators rights. 
+Add the following snippet to [security.properties](security.properties) to appoint users access rights for matrix-based security model. For example, to allow anonymous users create a slave connection Jenkins master, or give authenticated user administrators rights.
 
 ```
 matrixbasedsecurity {
