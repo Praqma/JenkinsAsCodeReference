@@ -31,6 +31,7 @@ if (properties.global.jenkinsRootUrl) {
 jlc.save()
 
 // Set Admin Email as a string "Name <email@>"
+println "--> Setting Admin e-mail address"
 if (properties.global.jenkinsAdminEmail) {
   def jlc = JenkinsLocationConfiguration.get()
   jlc.setAdminAddress(properties.global.jenkinsAdminEmail)
