@@ -30,6 +30,14 @@ if (properties.global.jenkinsRootUrl) {
 }
 jlc.save()
 
+// Set Admin Email as a string "Name <email@>"
+println "--> Setting Admin e-mail address"
+if (properties.global.jenkinsAdminEmail) {
+  def jlc = JenkinsLocationConfiguration.get()
+  jlc.setAdminAddress(properties.global.jenkinsAdminEmail)
+  jlc.save()
+}
+
 println "--> Set Global GIT configuration name to ${properties.global.git.name} and email address to ${properties.global.git.email}"
 def inst = Jenkins.getInstance()
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
