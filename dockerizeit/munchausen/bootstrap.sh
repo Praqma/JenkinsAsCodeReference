@@ -9,7 +9,10 @@ echo "Provided docker-compose.yml:"
 cat docker-compose.yml
 
 echo "Stop master and slave"
-docker stop dockerizeit_jmaster_1 dockerizeit_jslave_1
+docker-compose -p dockerizeit stop jmaster jslave
+
+echo "Remove all stopped containers"
+docker-compose -p dockerizeit rm -fva
 
 echo "Start new master and slave container using provided docker-compose.yml"
-docker-compose -p dockerizeit up -d --force-recreate
+docker-compose -p dockerizeit up -d
