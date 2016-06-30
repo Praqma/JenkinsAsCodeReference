@@ -41,10 +41,11 @@ EOM
 source ~/.bashrc
 ```
 
-* Create backup directories - they will be used to store build history, Gradle cache, and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
+* Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
 
 ```
 mkdir -p $HOME/jenkins-backup/jobs
+mkdir -p $HOME/jenkins-backup/userContent
 mkdir -p $HOME/jenkins-backup/slave/gradle
 mkdir -p $HOME/jenkins-backup/registry
 chmod -R 777 $HOME/jenkins-backup
