@@ -62,10 +62,42 @@ credentials {
   }
 }
 ```
+### Global section
 
+Some global properties in [jenkins.properties](jenkins.properties) are set through [globalconfig](globalconfig.groovy).
+
+```
+global {
+  // How many executors you want on master
+  numExecutorsOnMaster = 0
+  // Which address is used to axxess your Jenkins instance
+  // http://jenkins.my.company:8080
+  // left empty: http://$ip:8080
+  jenkinsRootUrl = ""
+  // Specify the administrator email
+  / used as return address in email notofications
+  jenkinsAdminEmail = "Jenkins <no-reply@yourcompany.com>"
+  scmQuietPeriod = 3
+  scmCheckoutRetryCount = 3
+  git {
+    // Jenkins in git
+    name = "Jenkins Jenkinsson"
+    email = "no-reply@yourcompany.com"
+  }
+  // Some default variables to use in job configurations.
+  variables {
+    default_credentials = "${credentials.base.credentialsId}"
+    default_repo = "git@github.com:Praqma/JenkinsAsCodeReference.git"
+    default_branch = "master"
+    utility_slave = "utility-slave"
+    master_image_name = "${images.masterImageName}"
+    slave_image_name = "${images.slaveImageName}"
+  }
+}
+```
 ### Slaves
 
-Slaves created by the [credentials.groovy](slaves.groovy)
+Slaves created by the [slaves.groovy](slaves.groovy)
 The script will read [slaves.properties](slaves.properties) and create corresponding slaves.
 ssh slaves configuration
 
@@ -253,7 +285,7 @@ ad {
 
 #### Jenkins own database
 
-Add the followning snippet to [security.properties](security.properties) in order to tell Jenkins to use its own database for the user management.
+Add the following snippet to [security.properties](security.properties) in order to tell Jenkins to use its own database for the user management.
 There is no support for sign up in UI because Jenkins configuration will be wiped out during redeployment, i.e. user database is not preserved.
 Preferably avoid this type of security realm and use 3rd party service for that - think LDAP, Unix users database, GitHub, Google etc.
 Also, consider a need for those users - do you really need them if you anyway control configuration through the git repo. Well, unless this is a test instance facing public network
@@ -274,6 +306,41 @@ owndb {
 }
 ```
 
+#### Google Login
+
+[Google Login plugin](https://wiki.jenkins-ci.org/display/JENKINS/Google+Login+Plugin) allows to login using Google domain credentials.
+Make sure to create file with the secret before enabling corresponding section
+
+```
+googlelogin {
+  enabled = false
+  clientId = "someId"
+  clientSecret = "/var/jenkins_home/.ssh/.googlesecret"
+  domain = "domain.com"
+}
+```
+
 #### Matrix-based security
 
-TBD
+Add the following snippet to [security.properties](security.properties) to appoint users access rights for matrix-based security model. For example, to allow anonymous users create a slave connection Jenkins master, or give authenticated user administrators rights.
+
+```
+matrixbasedsecurity {
+  enabled = true
+  users {
+    anonymous {
+      userId = hudson.security.ACL.ANONYMOUS_USERNAME
+      permissions = [
+                      hudson.model.Computer.CREATE,
+                      hudson.model.Computer.CONNECT,
+                      hudson.model.Hudson.READ,
+                      hudson.model.Job.READ]
+    }
+    authenticated {
+      userId = "authenticated"
+      permissions = [
+                       hudson.model.Hudson.ADMINISTER]
+    }
+  }
+}
+```

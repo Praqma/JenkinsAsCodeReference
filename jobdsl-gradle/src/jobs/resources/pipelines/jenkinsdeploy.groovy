@@ -1,4 +1,9 @@
-node {
+// Pipeline doesn't resolve env outside of node so to read node name
+// we have to do the trick below
+def nodeName = ""
+node() { nodeName = env.utility_slave }
+
+node(nodeName) {
    stage 'Checkout'
    checkout([$class: 'GitSCM',
              branches: [[name: "*/${env.default_branch}"]],

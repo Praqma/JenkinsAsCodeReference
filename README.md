@@ -41,13 +41,14 @@ EOM
 source ~/.bashrc
 ```
 
-* Create backup directories - they will be used to store build history, Gradle cache, and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
+* Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
 
 ```
 mkdir -p $HOME/jenkins-backup/jobs
+mkdir -p $HOME/jenkins-backup/userContent
 mkdir -p $HOME/jenkins-backup/slave/gradle
 mkdir -p $HOME/jenkins-backup/registry
-chmod -R rwx+ugo $HOME/jenknis-backup
+chmod -R 777 $HOME/jenkins-backup
 ```
 
 * Make sure that you have `$HOME/.ssh` directory with the ssh keys for the user that can access GitHub or your own Git hosting. Docker compose will mount `$HOME/.ssh` to the Jenkins master container so it can create default credentials from it.

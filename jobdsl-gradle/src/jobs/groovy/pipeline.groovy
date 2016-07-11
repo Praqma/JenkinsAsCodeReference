@@ -7,5 +7,3 @@ new JobBuilder(this as DslFactory, "jenkins_as_a_code-pipeline", "pipeline")
     .addScmPollTrigger("@midnight")
     .addPipelineDefinitionFile("jobdsl-gradle/src/jobs/resources/pipelines/jenkinsdeploy.groovy")
     .build()
-
-    

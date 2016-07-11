@@ -1,20 +1,14 @@
 import job.JobBuilder
+import job.Helpers
 
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 
 // This is a tmp hack. We should replace this job with pipeline
 // since pipeline jobs have better support for reading credentials id
-// from env variables
-def thr = Thread.currentThread()
-// if we are running in Jenkins
-def default_credentials = ""
-if (thr.hasProperty('executable')) {
-  def build = thr?.executable
-  default_credentials = build.parent.builds[0].properties.get("envVars")['default_credentials']
-} else {
-  default_credentials = "jenkins"
-}
+// and slave to run on from env variables
+def default_credentials = Helpers.readEnvVariable("default_credentials", "jenkins")
+def utilitySlave = Helpers.readEnvVariable("utility_slave", "utility-slave")
 
 // One more tmp hack - assume empty http_proxy/https_proxy/no_proxy
 // First reason is this bug in docker-compose https://github.com/docker/compose/issues/3281
@@ -34,12 +28,11 @@ cd $WORKSPACE/dockerizeit
 docker-compose build
 '''
 
-println "default credentials ${default_credentials}"
-
 Job review = new JobBuilder(this as DslFactory, "jenkins_as_a_code-review")
     .addLogRotator()
-    .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew buildXml")
-    .addShellStep("cd \$WORKSPACE/jobdsl-gradle; ./gradlew test")
+    .addLabel(utilitySlave)
+    .addGradleStep(["buildXMl"], "jobdsl-gradle")
+    .addGradleStep(["test"], "jobdsl-gradle")
     .addShellStep("$build_script")
     .addShellStep("cd \$WORKSPACE/dockerizeit; ./generate-compose.py --debug --file docker-compose.yml --jmaster-image test-image --jmaster-version test-version --jslave-image test-image --jslave-version test-version && cat docker-compose.yml && git checkout HEAD docker-compose.yml")
     .addShellStep("cd \$WORKSPACE/dockerizeit/munchausen; cp ../docker-compose.yml .; docker build --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t munchausen .")

@@ -17,6 +17,7 @@ external-monitor-job:1.4
 git:2.4.4
 git-client:1.19.6
 git-server:1.6
+google-login:1.2.1
 gradle:1.24
 handlebars:1.1.1
 icon-shim:2.0.3

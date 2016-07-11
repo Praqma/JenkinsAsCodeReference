@@ -26,7 +26,7 @@ properties.seedjobs.each {
   if (job) { job.delete() }
   println "--> Create ${it.value.name} seed jod"
   def project = new FreeStyleProject(Jenkins.instance, it.value.name)
-  project.setAssignedLabel()
+  project.setAssignedLabel(new labels.LabelAtom(properties.global.variables.utility_slave))
   List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
   dslGitrepoList.add(new UserRemoteConfig(it.value.repo, "", "", it.value.credentials))
   List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec(it.value.branch))
