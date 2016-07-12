@@ -41,13 +41,14 @@ EOM
 source ~/.bashrc
 ```
 
-* Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
+* Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. Also we will use jenkins-backup/workspace directory for mapping to /root/workspace inside slave docker container - it needs to be done for working docker pipeline plugin properly. See [JENKINS-35217](https://issues.jenkins-ci.org/browse/JENKINS-35217) for details. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
 
 ```
 mkdir -p $HOME/jenkins-backup/jobs
 mkdir -p $HOME/jenkins-backup/userContent
 mkdir -p $HOME/jenkins-backup/slave/gradle
 mkdir -p $HOME/jenkins-backup/registry
+mkdir -p $HOME/jenkins-backup/workspace
 chmod -R 777 $HOME/jenkins-backup
 ```
 
