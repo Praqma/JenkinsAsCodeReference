@@ -24,6 +24,7 @@ icon-shim:2.0.3
 javadoc:1.3
 job-dsl:1.45
 jquery-detached:1.2.1
+jquery:1.7.2-1
 junit:1.11
 ldap:1.11
 mailer:1.16
@@ -33,7 +34,9 @@ matrix-project:1.6
 maven-plugin:2.12.1
 momentjs:1.1.1
 monitoring:1.59.0
+nodelabelparameter:1.7.2
 pam-auth:1.2
+parameterized-trigger:2.22
 pipeline-build-step:2.0
 pipeline-input-step:2.0
 pipeline-rest-api:1.3

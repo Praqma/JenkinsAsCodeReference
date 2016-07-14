@@ -172,7 +172,24 @@ public class JobBuilder {
         }
         this
     }
-
+    /**
+     * Use this function to add Build trigger
+     *
+     * @ArrayList<String>    projects List of upsteam projects trigger will watch
+     * @String               threshold the result of the upstreams build when run the job.
+     *                       SUCCESS by default
+     */
+        public JobBuilder addBuildTrigger(ArrayList<String> projects, String threshold = 'SUCCESS', boolean debug = false) {
+            if (debug) {
+                // TODO: set something for the debug mode
+                println 'Debug is set to true'
+            } else {
+                job.triggers {
+                    upstream(projects.join(", "), threshold)
+                }
+            }
+            this
+        }
     /**
      * Use this function to add GitLab trigger to the job configuration
      *
@@ -281,6 +298,31 @@ public class JobBuilder {
         }
         job.publishers {
             buildPipelineTrigger(jobs.join(", "))
+        }
+        this
+    }
+    /**
+     * Use this method to parameterize your build using NodeLabel parameter plung,
+     * see more details https://jenkinsci.github.io/job-dsl-plugin/#path/job-parameters-nodeParam
+     * and https://wiki.jenkins-ci.org/display/JENKINS/NodeLabel+Parameter+Plugin
+     * There is a reference to issue [JENKINS-33756](https://issues.jenkins-ci.org/browse/JENKINS-33756)
+     * "Run on all nodes matching the label" or allNodes in DSL flag schedules one more build
+     * on the node job has been started.
+     *
+     * @String paramName                  the paramater name
+     * @ArrayList<String> nodesLabels     list of labels of nodes you want to run the job
+     *
+     */
+    public JobBuilder addJobBuildParameter(String paramName, ArrayList<String> nodesLabels, boolean debug = false) {
+        if (debug) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        }
+        job.parameters {
+            labelParam (paramName) {
+                defaultValue(nodesLabels.join(", "))
+                allNodes('allCases', 'IgnoreOfflineNodeEligibility')
+            }
         }
         this
     }
