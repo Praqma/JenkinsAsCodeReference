@@ -20,7 +20,7 @@ public class JobBuilder {
         if ( type == 'freestyle' ) {
             this.job = this.dslFactory.job(name)
         } else if ( type == 'pipeline' ) {
-            this.job = this.dslFactory.workflowJob(name)          
+            this.job = this.dslFactory.workflowJob(name)
         } else {
             throw new Exception('Not supported job type')
         }
@@ -150,6 +150,9 @@ public class JobBuilder {
                     credentials(credential)
                 }
                 branch(repoBranch)
+                extensions {
+                    pruneBranches()
+                }
             }
         }
         this
