@@ -28,6 +28,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker:/var/lib/docker
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
+      - $HOME/jenkins-backup/workspace:/root/workspace
 
   registry:
     image: registry:2.4.0
