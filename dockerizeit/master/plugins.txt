@@ -12,6 +12,8 @@ buildgraph-view:1.1.1
 cloudbees-folder:5.8
 credentials:1.27
 cvs:2.12
+docker-commons:1.4.0
+docker-workflow:1.6
 durable-task:1.9
 external-monitor-job:1.4
 git:2.4.4
