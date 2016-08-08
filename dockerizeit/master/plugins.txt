@@ -4,6 +4,7 @@ ansicolor:0.4.2
 ant:1.2
 antisamy-markup-formatter:1.3
 artifactory:2.4.7
+authentication-tokens:1.1
 branch-api:1.6
 build-flow-plugin:0.18
 build-timeout:1.16
@@ -12,6 +13,8 @@ buildgraph-view:1.1.1
 cloudbees-folder:5.8
 credentials:1.27
 cvs:2.12
+docker-commons:1.4.0
+docker-workflow:1.7
 durable-task:1.9
 external-monitor-job:1.4
 git:2.4.4
