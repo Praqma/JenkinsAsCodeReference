@@ -15,7 +15,7 @@ import javaposse.jobdsl.dsl.DslFactory
  **/
 new JobBuilder(this as DslFactory, "jenkins_as_a_code-cleaup-docker")
     .addLogRotator()
-    .addBuildTrigger(["jenkins_as_a_code-pipeline"])
-    .addJobBuildParameter("Docker hosts", ["docker"])
+    .addCronBuildTrigger('H 2-3 * * *')
+    .addNodeLabelBuildParameter("Docker hosts", ["docker"])
     .addShellStep("docker-clean images")
     .build()
