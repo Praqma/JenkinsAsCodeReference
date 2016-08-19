@@ -106,7 +106,10 @@ global {
 
 Slaves created by the [slaves.groovy](slaves.groovy)
 The script will read [slaves.properties](slaves.properties) and create corresponding slaves.
-ssh slaves configuration
+Consider using [generate_slaves_config.groovy](../scripts/generate_slaves_config.groovy) to generate configuration for your existing slaves.
+Simply run the script in Jenkins Script Console (Manage Jenkins -> Script Console). Please note that there are limitations (see comments inside script).
+
+SSH slaves configuration
 
 ```
 slaves {

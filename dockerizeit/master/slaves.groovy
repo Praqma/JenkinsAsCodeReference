@@ -12,7 +12,7 @@ def properties = new ConfigSlurper().parse(new File("$home_dir/slaves.properties
 println properties
 
 properties.slaves.each {
-  println "--> Create ssh slave ${it.key}"
+  println "--> Create ${it.value.type} slave ${it.key}"
   println it
   ComputerLauncher launcher = null
   switch (it.value.type) {
