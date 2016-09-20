@@ -1,5 +1,6 @@
+os: linux
+dist: trusty
 sudo: required
-
 language: java
 
 services:
