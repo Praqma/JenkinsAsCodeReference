@@ -1,5 +1,6 @@
+os: linux
+dist: trusty
 sudo: required
-
 language: java
 
 services:
@@ -14,7 +15,7 @@ env:
   DOCKER_VERSION: 1.11.1-0~trusty
 before_install:
   - apt-cache madison docker-engine
-  - sudo apt-get -o Dpkg::Options::="--force-confnew" install -y docker-engine=${DOCKER_VERSION}
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install --force-yes docker-engine=${DOCKER_VERSION}
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
