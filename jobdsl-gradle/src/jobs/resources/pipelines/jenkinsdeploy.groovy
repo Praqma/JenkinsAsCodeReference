@@ -36,7 +36,7 @@ node(nodeName) {
 
    stage 'Deploy'
    sh './dockerizeit/generate-compose.py --debug --file dockerizeit/docker-compose.yml --jmaster-image ${master_image_name} --jmaster-version $(git describe --tags) --jslave-image ${slave_image_name} --jslave-version $(git describe --tags)'
-   sh 'cp docker-compose.yml dockerizeit/munchausen/'
-   sh 'cd dockerizeit/munchausen && docker build --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t munchausen . && docker run -d -v /var/run/docker.sock:/var/run/docker.sock munchausen $(git describe --tags)'
+   sh 'docker-compose bundle -o jenkinsasacodepipeline.dab'
+   sh 'docker deploy jenkinsasacodepipeline'
    archive 'docker-compose.yml'
 }
