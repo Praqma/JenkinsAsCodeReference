@@ -5,11 +5,11 @@ The intention of this project is to create the easily configurable template, sum
 
 ### Getting started
 
-#### Requirements
+#### Recommended setup
 
-* Linux host
-* Docker 1.11
-* Docker Compose 1.7
+* Linux host that supports Docker
+* Docker 1.12.1 (minimal tested version is 1.11.0)
+* Docker Compose 1.8.0 (minimal tested version is 1.7.0)
 * Make sure that you are using umask 022 or similar since during the build process configuration files will be copied to the Jenkins container as a root user but Jenkins runs by another user, so we need to make sure that those files are readable for group and others.
 
 #### Preparations
@@ -20,7 +20,7 @@ The intention of this project is to create the easily configurable template, sum
 git clone https://github.com/Praqma/JenkinsAsCodeReference.git
 ```
 
-* Set proxy variables. You have to do it even if you are not using a proxy because there is [a bug in docker-compose](https://github.com/docker/compose/issues/3281) which makes args return None instead of empty string. Because of that, if you don't use proxy, you have to define empty environment variables http_proxy, https_proxy, no_proxy. Otherwise you would have those variables set to point out your proxy settings
+* Set proxy variables. If you are still using docker-compose 1.7.0 then you have to do it even if you are not using a proxy because there is [a bug in docker-compose](https://github.com/docker/compose/issues/3281) which makes args return None instead of empty string. Because of that, if you don't use proxy, you have to define empty environment variables http_proxy, https_proxy, no_proxy. Otherwise you would have those variables set to point out your proxy settings
 
 ```
 export http_proxy=<empty or proxy address>
