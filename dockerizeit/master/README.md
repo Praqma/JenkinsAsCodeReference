@@ -16,6 +16,13 @@ plugins = [:]
 jenkins.model.Jenkins.instance.getPluginManager().getPlugins().each {plugins << ["${it.getShortName()}":"${it.getVersion()}"]}
 plugins.sort().each() { println "${it.key}:${it.value}"}
 ```
+###Manual installation of custom plugin
+If you have a custom .hpi / .jpi plugin that the master needs to run with copy the file into the ```dockerizeit/master/``` and add the following line to ```dockerizeit/master/Dockerfile``` just after
+ ```RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt ```:
+```
+COPY *.hpi  $JENKINS_HOME/plugins/
+```
+
 
 ## Configuration through the Groovy files
 
@@ -99,7 +106,10 @@ global {
 
 Slaves created by the [slaves.groovy](slaves.groovy)
 The script will read [slaves.properties](slaves.properties) and create corresponding slaves.
-ssh slaves configuration
+Consider using [generate_slaves_config.groovy](../scripts/generate_slaves_config.groovy) to generate configuration for your existing slaves.
+Simply run the script in Jenkins Script Console (Manage Jenkins -> Script Console). Please note that there are limitations (see comments inside script).
+
+SSH slaves configuration
 
 ```
 slaves {

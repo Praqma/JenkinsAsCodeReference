@@ -20,7 +20,7 @@ public class JobBuilder {
         if ( type == 'freestyle' ) {
             this.job = this.dslFactory.job(name)
         } else if ( type == 'pipeline' ) {
-            this.job = this.dslFactory.workflowJob(name)          
+            this.job = this.dslFactory.workflowJob(name)
         } else {
             throw new Exception('Not supported job type')
         }
@@ -150,6 +150,9 @@ public class JobBuilder {
                     credentials(credential)
                 }
                 branch(repoBranch)
+                extensions {
+                    pruneBranches()
+                }
             }
         }
         this
@@ -172,7 +175,22 @@ public class JobBuilder {
         }
         this
     }
-
+    /**
+     * Use this function to add Build cron trigger
+     *
+     * @String           A string you set the time range in cron format
+     */
+        public JobBuilder addCronBuildTrigger(String time, boolean debug = false) {
+            if (debug) {
+                // TODO: set something for the debug mode
+                println 'Debug is set to true'
+            } else {
+                job.triggers {
+                    cron(time)
+                }
+            }
+            this
+        }
     /**
      * Use this function to add GitLab trigger to the job configuration
      *
@@ -281,6 +299,31 @@ public class JobBuilder {
         }
         job.publishers {
             buildPipelineTrigger(jobs.join(", "))
+        }
+        this
+    }
+    /**
+     * Use this method to parameterize your build using NodeLabel parameter plugin,
+     * see more details https://jenkinsci.github.io/job-dsl-plugin/#path/job-parameters-nodeParam
+     * and https://wiki.jenkins-ci.org/display/JENKINS/NodeLabel+Parameter+Plugin
+     * There is a reference to issue [JENKINS-33756](https://issues.jenkins-ci.org/browse/JENKINS-33756)
+     * "Run on all nodes matching the label" or allNodes in DSL flag schedules one more build
+     * on the node job has been started.
+     *
+     * @String paramName                  the paramater name
+     * @ArrayList<String> nodesLabels     list of labels of nodes you want to run the job
+     *
+     */
+    public JobBuilder addNodeLabelBuildParameter(String paramName, ArrayList<String> nodesLabels, boolean debug = false) {
+        if (debug) {
+            // TODO: set something for the debug mode
+            println 'Debug is set to true'
+        }
+        job.parameters {
+            labelParam (paramName) {
+                defaultValue(nodesLabels.join(", "))
+                allNodes('allCases', 'IgnoreOfflineNodeEligibility')
+            }
         }
         this
     }
