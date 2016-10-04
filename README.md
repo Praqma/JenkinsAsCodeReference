@@ -8,7 +8,7 @@ The intention of this project is to create the easily configurable template, sum
 #### Requirements
 
 * Linux host
-* Docker 1.11
+* Docker 1.12.1
 * Docker Compose 1.7
 * Make sure that you are using umask 022 or similar since during the build process configuration files will be copied to the Jenkins container as a root user but Jenkins runs by another user, so we need to make sure that those files are readable for group and others.
 
