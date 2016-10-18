@@ -16,6 +16,7 @@ services:
       - $HOME/.ssh:/var/jenkins_home/.ssh
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
       - $HOME/jenkins-backup/userContent:/var/jenkins_home/userContent
+      - /etc/localtime:/etc/localtime
 
   jslave:
     build:
@@ -29,6 +30,7 @@ services:
       - /var/lib/docker:/var/lib/docker
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
       - $HOME/jenkins-backup/workspace:/root/workspace
+      - /etc/localtime:/etc/localtime
 
   registry:
     image: registry:2.4.0
@@ -36,6 +38,7 @@ services:
       - 5000:5000
     volumes:
       - $HOME/jenkins-backup/registry:/var/lib/registry
+      - /etc/localtime:/etc/localtime
 
   registry-web:
     image: konradkleine/docker-registry-frontend:v2
@@ -45,3 +48,5 @@ services:
       - ENV_DOCKER_REGISTRY_HOST=registry
       - ENV_DOCKER_REGISTRY_PORT=5000
       - ENV_MODE_BROWSE_ONLY=true
+    volumes:
+      - /etc/localtime:/etc/localtime
