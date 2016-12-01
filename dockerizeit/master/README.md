@@ -110,6 +110,25 @@ global {
   }
 }
 ```
+
+Configuration of [Groovy Shared Library plugin](https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Shared+Groovy+Libraries+Plugin) implemented in [globalPipelineLibraries.groovy](globalPipelineLibraries.groovy).
+Use the following block in jenkins.properties to define your libraries
+
+```
+libraries{
+  library1 {
+      enabled = true
+      name = "name-of-library"
+      version = "master"
+      implicitly = true
+      allow_overridden = false
+      scm_path = "https://github.com/Andrey9kin/shared-groovy-lib-test.git"
+      credentialsId = ""
+      branch = "master"
+  }
+}
+```
+
 ### Slaves
 
 Slaves created by the [slaves.groovy](slaves.groovy)
