@@ -13,7 +13,7 @@ import javaposse.jobdsl.dsl.DslFactory
  * clean up job just once, while we don't have a multihost cluster - it is another
  * possible solution. In this case we will not get the issue with double job running.
  **/
-new JobBuilder(this as DslFactory, "jenkins_as_a_code-cleaup-docker")
+new JobBuilder(this as DslFactory, "jenkins_as_a_code-cleanup-docker")
     .addLogRotator()
     .addCronBuildTrigger('H 2-3 * * *')
     .addNodeLabelBuildParameter("Docker hosts", ["docker"])
