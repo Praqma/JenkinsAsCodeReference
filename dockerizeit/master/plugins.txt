@@ -45,14 +45,14 @@ pipeline-input-step:2.0
 pipeline-rest-api:1.3
 pipeline-stage-step:2.0
 pipeline-stage-view:1.3
-pretested-integration:2.4.0 (10ce3)
+pretested-integration:2.4.0
 scm-api:1.2
 script-security:1.18.1
 ssh-credentials:1.11
 ssh-slaves:1.10
 structs:1.1
 subversion:2.5.7
-swarm:2.0
+swarm:2.2
 token-macro:1.12.1
 translation:1.12
 windows-slaves:1.1

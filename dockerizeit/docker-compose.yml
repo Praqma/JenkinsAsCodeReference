@@ -14,12 +14,28 @@ services:
       - "50000:50000"
     volumes:
       - $HOME/.ssh:/var/jenkins_home/.ssh
+      - $HOME/.ssh/.password:/var/jenkins_home/.ssh/.password
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
       - $HOME/jenkins-backup/userContent:/var/jenkins_home/userContent
+    command: [--prefix=/jenkins]
 
   jslave:
     build:
       context: slave/
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker:/var/lib/docker
+      - $HOME/jenkins-backup/slave/gradle:/root/.gradle
+      - $HOME/jenkins-backup/workspace:/root/workspace
+
+  jslave2:
+    build:
+      context: slave/
+#      dockerfile: jslave2_Dockerfile
       args:
         - http_proxy
         - https_proxy

@@ -1,4 +1,4 @@
-FROM jenkins:1.651.1-alpine
+FROM jenkins:2.7.3
 
 # Add support for proxies.
 # Values should be passed as build args
@@ -6,7 +6,7 @@ FROM jenkins:1.651.1-alpine
 ENV http_proxy ${http_proxy:-}
 ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
-ARG JAVA_OPTS
+ARG JAVA_OPTS="-Djenkins.install.runSetupWizard=false, -Djenkins.slaves.JnlpSlaveAgentProtocol3.enabled=true"
 ENV JAVA_OPTS ${JAVA_OPTS:-}
 
 # Define build argument and env variable master_image_version
@@ -17,7 +17,9 @@ ENV master_image_version $master_image_version
 
 # Install plugins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+#COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+#RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr '\n' ' ')
 
 # Copy configuration scripts that will be executed by groovy
 COPY *.groovy /usr/share/jenkins/ref/init.groovy.d/

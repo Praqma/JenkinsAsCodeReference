@@ -1,4 +1,4 @@
-# Jenkins as Code template
+# Jenkins Infrastructure as Code template
 
 ### Description
 The intention of this project is to create the easily configurable template, summarize the current best thinking and create unification for the stateless Jenkins deployments.
@@ -8,8 +8,8 @@ The intention of this project is to create the easily configurable template, sum
 #### Requirements
 
 * Linux host
-* Docker 1.11
-* Docker Compose 1.7
+* Docker 1.11 
+* Docker Compose 1.8
 * Make sure that you are using umask 022 or similar since during the build process configuration files will be copied to the Jenkins container as a root user but Jenkins runs by another user, so we need to make sure that those files are readable for group and others.
 
 #### Preparations
@@ -17,28 +17,7 @@ The intention of this project is to create the easily configurable template, sum
 * Clone this repository
 
 ```
-git clone https://github.com/Praqma/JenkinsAsCodeReference.git
-```
-
-* Set proxy variables. You have to do it even if you are not using a proxy because there is [a bug in docker-compose](https://github.com/docker/compose/issues/3281) which makes args return None instead of empty string. Because of that, if you don't use proxy, you have to define empty environment variables http_proxy, https_proxy, no_proxy. Otherwise you would have those variables set to point out your proxy settings
-
-```
-export http_proxy=<empty or proxy address>
-export https_proxy=<empty or proxy address>
-export no_proxy=<empty or proxy address>
-export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<proxy port> -Dhttp.nonProxyHosts=localhost,127.0.0.1,*.whatever.com -Dhttp.proxyHost=<proxy address> -Dhttp.proxyPort=<proxy port>
-```
-
-or
-
-```
-cat > ~/.bashrc <<- EOM
-export http_proxy=<empty or proxy address>
-export https_proxy=<empty or proxy address>
-export no_proxy=<empty or proxy address>
-export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<proxy port> -Dhttp.nonProxyHosts=localhost,127.0.0.1,*.whatever.com -Dhttp.proxyHost=<proxy address> -Dhttp.proxyPort=<proxy port>
-EOM
-source ~/.bashrc
+git clone <<change>>
 ```
 
 * Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. Also we will use jenkins-backup/workspace directory for mapping to /root/workspace inside slave docker container - it needs to be done for working docker pipeline plugin properly. See [JENKINS-35217](https://issues.jenkins-ci.org/browse/JENKINS-35217) for details. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
@@ -85,14 +64,3 @@ Find detailed description of configuration scripts and configuration file [here]
 
 ### Roadmap and contributions
 
-#### Workflow
-Issues labeling follows Pragmatic workflow described [here](http://www.praqma.com/stories/a-pragmatic-workflow/)
-Describe your idea as ticket, make sure to put `Action - needs grooming` label and let's discuss it together
-
-#### Contributions verification
-We do have [Travis CI job](https://travis-ci.org/Praqma/JenkinsAsCodeReference) running for all branches so make sure it goes green for all your contributions.
-You can also use review job created on the startup. This job relies on principals described in [this article](http://www.josra.org/blog/An-automated-git-branching-strategy.html)
-
-#### Project progress
-You can see project status on [its Waffle board](https://waffle.io/Praqma/JenkinsAsCodeReference).
-At some point of time, we will kick off maintainers meetings. Stay tuned
