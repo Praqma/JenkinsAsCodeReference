@@ -23,4 +23,8 @@ RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr 
 
 # Copy configuration scripts that will be executed by groovy
 COPY *.groovy /usr/share/jenkins/ref/init.groovy.d/
+COPY basic-security.groovy $JENKINS_HOME/init.groovy.d/basic-security.groovy
 COPY *.properties $JENKINS_HOME/
+
+# Indicate not to run wizard
+RUN echo 2.7.3 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
