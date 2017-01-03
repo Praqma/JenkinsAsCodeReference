@@ -109,7 +109,6 @@ class JobsHelperTest extends Specification {
             it.setBuildDescription[0].value() == true
             it.addNoteOnMergeRequest[0].value() == false
             it.addVoteOnMergeRequest[0].value() == false
-            it.allowAllBranches[0].value() == false
             it.includeBranchesSpec[0].value().empty
             it.excludeBranchesSpec[0].value().empty
         }
