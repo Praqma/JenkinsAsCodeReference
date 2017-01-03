@@ -1,18 +1,10 @@
 import java.lang.System
 import hudson.model.*
 import jenkins.model.*
-import hudson.slaves.*
 import javaposse.jobdsl.plugin.*
-import hudson.plugins.git.*
-import java.util.Collections
-import java.util.List
-import hudson.security.ACL
 import hudson.triggers.TimerTrigger
-import com.cloudbees.plugins.credentials.*
-import com.cloudbees.plugins.credentials.common.*
-import com.cloudbees.plugins.credentials.domains.*
-import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
-import hudson.plugins.sshslaves.*
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
 
 def instance = Jenkins.getInstance()
 def home_dir = System.getenv("JENKINS_HOME")
@@ -25,26 +17,23 @@ properties.seedjobs.each {
   def job = Jenkins.instance.getJob(it.value.name)
   if (job) { job.delete() }
   println "--> Create ${it.value.name} seed jod"
-  def project = new FreeStyleProject(Jenkins.instance, it.value.name)
-  project.setAssignedLabel(new labels.LabelAtom(properties.global.variables.utility_slave))
-  List<UserRemoteConfig> dslGitrepoList = new ArrayList<UserRemoteConfig>()
-  dslGitrepoList.add(new UserRemoteConfig(it.value.repo, "", "", it.value.credentials))
-  List<BranchSpec> dslGitBranches = Collections.singletonList(new BranchSpec(it.value.branch))
-  GitSCM dslGitSCM = new GitSCM(dslGitrepoList,
-                                dslGitBranches,
-                                false,
-                                null, null, null, null);
-  project.setScm(dslGitSCM)
-  def jobDslBuildStep = new ExecuteDslScripts(scriptLocation=new ExecuteDslScripts.ScriptLocation(value = "false",
-                                                                      targets=it.value.path,
-                                                                      scriptText=""),
-                                                                      ignoreExisting=false,
-                                                                      removedJobAction=RemovedJobAction.DELETE,
-                                                                      removedViewAction=RemovedViewAction.DELETE,
-                                                                      lookupStrategy=LookupStrategy.JENKINS_ROOT,
-                                                                      additionalClasspath=it.value.classpath);
+  def project = Jenkins.instance.createProject(WorkflowJob.class, it.value.name)
+  project.setDefinition(new CpsFlowDefinition("""
+import javaposse.jobdsl.plugin.*
 
-  project.getBuildersList().add(jobDslBuildStep)
+node("${properties.global.variables.utility_slave}") {
+    git branch: "${it.value.branch}", credentialsId: "${it.value.credentials}", url: "${it.value.repo}"
+    step([
+        \$class: 'ExecuteDslScripts',
+        targets: "${it.value.path}",
+        ignoreMissingFiles: true,
+        ignoreExisting: false,
+        removedJobAction: RemovedJobAction.DELETE,
+        removedViewAction: RemovedViewAction.DELETE,
+        lookupStrategy: LookupStrategy.JENKINS_ROOT,
+        additionalClasspath: "${it.value.classpath}"
+    ])
+}"""))
   project.addTrigger(new TimerTrigger("@midnight"))
   it.value.parameters.each { key, value ->
     helpers.addBuildParameter(project, key, value)
