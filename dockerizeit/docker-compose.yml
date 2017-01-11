@@ -18,6 +18,7 @@ services:
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
       - $HOME/jenkins-backup/userContent:/var/jenkins_home/userContent
     command: [--prefix=/jenkins]
+    hostname: Jenkins_master_1
 
   jslave:
     build:
@@ -31,6 +32,7 @@ services:
       - /var/lib/docker:/var/lib/docker
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
       - $HOME/jenkins-backup/workspace:/root/workspace
+    hostname: Slave1
 
   jslave2:
     build:
@@ -45,6 +47,7 @@ services:
       - /var/lib/docker:/var/lib/docker
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
       - $HOME/jenkins-backup/workspace:/root/workspace
+    hostname: Slave2
 
   #registry:
     #image: registry:2.4.0
