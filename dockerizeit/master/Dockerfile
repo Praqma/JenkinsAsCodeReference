@@ -20,7 +20,7 @@ CMD ["--prefix=/jenkins -Djenkins.install.runSetupWizard=false"]
 
 # Install plugins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
-#COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 #RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
 RUN /usr/local/bin/install-plugins.sh $(cat /usr/share/jenkins/plugins.txt | tr '\n' ' ')
 

@@ -37,7 +37,7 @@ services:
   jslave2:
     build:
       context: slave/
-#      dockerfile: jslave2_Dockerfile
+      dockerfile: jslave2_Dockerfile
       args:
         - http_proxy
         - https_proxy
