@@ -32,6 +32,20 @@ services:
       - $HOME/jenkins-backup/workspace:/root/workspace
       - /etc/localtime:/etc/localtime
 
+  jslave2:
+     build:
+       context: slave/
+       args:
+         - http_proxy
+         - https_proxy
+         - no_proxy
+     volumes:
+       - /var/run/docker.sock:/var/run/docker.sock
+       - /var/lib/docker:/var/lib/docker
+       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
+       - $HOME/jenkins-backup/workspace:/root/workspace
+       - /etc/localtime:/etc/localtime
+
   registry:
     image: registry:2.4.0
     ports:
