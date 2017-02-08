@@ -50,10 +50,13 @@ if ( env.containsKey('master_image_version') ) {
   // master_image_version set as env variable by the build process
   // Set it as a global variable in Jenkins to increase visibility
   helpers.addGlobalEnvVariable(Jenkins, 'master_image_version', env['master_image_version'])
-  systemMessage = "This Jenkins instance generated from code.\n " +
+  def date = new Date()
+  sdf = new java.text.SimpleDateFormat("MM/dd/yyyy HH:mm:ss")
+  systemMessage = "This Jenkins instance generated from code.\n\n" +
                   "Avoid any manual changes since they will be discarded with next deployment.\n " +
-                  "Change source instead. Jenkins docker image version: ${env['master_image_version']}\n\n" +
-                  "Update ${properties.global.variables.default_repo} to change configuration"
+                  "Change source instead: ${properties.global.variables.default_repo}\n\n" +
+                  "Jenkins docker image version: ${env['master_image_version']}\n" +
+                  "Deployment date: ${sdf.format(date)}\n\n"
   println "Set system message to:\n ${systemMessage}"
   Jenkins.instance.setSystemMessage(systemMessage)
 } else {
