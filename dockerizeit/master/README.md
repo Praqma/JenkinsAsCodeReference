@@ -1,5 +1,3 @@
-whatever
-
 # Jenkins master setup explained
 
 Jenkins configured on startup using Groovy scripts from the dockerizeit/master directory. All scripts read configuration parameters from properties files. So if you would like to adjust your instance parameters then only change them in the corresponding properties file - no Groovy hacking needed. If you are missing something, then you are very welcome to contribute support for whatever you need.
