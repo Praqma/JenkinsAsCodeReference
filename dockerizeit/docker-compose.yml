@@ -9,6 +9,12 @@ services:
         - https_proxy
         - no_proxy
         - JAVA_OPTS
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size:  "200m"
+        max-file: "3"
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -25,6 +31,12 @@ services:
         - http_proxy
         - https_proxy
         - no_proxy
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size:  "200m"
+        max-file: "3"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker:/var/lib/docker
