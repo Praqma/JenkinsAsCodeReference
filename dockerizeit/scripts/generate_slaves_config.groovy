@@ -32,6 +32,11 @@ for (aSlave in hudson.model.Hudson.instance.slaves) {
       slave['launchTimeoutSeconds'] = launcher.getLaunchTimeoutSeconds()
       slave['maxNumRetries'] = launcher.getMaxNumRetries()
       slave['retryWaitTime'] = launcher.getRetryWaitTime()
+      slave['env'] = [:]
+      props = aSlave.nodeProperties.getAll(hudson.slaves.EnvironmentVariablesNodeProperty.class)
+      for (prop in props) {
+        prop.getEnvVars().each{ k, v -> slave['env'][k] = v }
+      }
       break
     default:
       slave['type'] = launcher.getClass().getName()
