@@ -35,14 +35,23 @@ properties.slaves.each {
     default:
       throw new UnsupportedOperationException("${it.value.type} slave type is not supported!")
       break
-    }
-    DumbSlave dumb = new DumbSlave(it.value.name,                  // Agent name
-                                   it.value.description,           // Agent description
-                                   it.value.remoteFS,              // Workspace on the agent's computer
-                                   it.value.executors,             // Number of executors
-                                   it.value.mode,                  // "Usage" field, EXCLUSIVE is "only tied to node", NORMAL is "any"
-                                   it.value.labels,                // Labels
-                                   launcher,                       // Launch strategy, JNLP is the Java Web Start setting services use
-                                   it.value.retention)             // Is the "Availability" field and INSTANCE means "Always"
-    Jenkins.instance.addNode(dumb)
+  }
+  DumbSlave dumb = new DumbSlave(it.value.name,                  // Agent name
+                                 it.value.description,           // Agent description
+                                 it.value.remoteFS,              // Workspace on the agent's computer
+                                 it.value.executors,             // Number of executors
+                                 it.value.mode,                  // "Usage" field, EXCLUSIVE is "only tied to node", NORMAL is "any"
+                                 it.value.labels,                // Labels
+                                 launcher,                       // Launch strategy, JNLP is the Java Web Start setting services use
+                                 it.value.retention)             // Is the "Availability" field and INSTANCE means "Always"
+
+  // Add env variables
+  def entryList = []
+  for (var in it.value.env) {
+    entryList.add(new EnvironmentVariablesNodeProperty.Entry(var.key, var.value))
+  }
+  def evnp = new EnvironmentVariablesNodeProperty(entryList)
+  dumb.nodeProperties.add(evnp)
+
+  Jenkins.instance.addNode(dumb)
 }

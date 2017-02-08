@@ -161,6 +161,9 @@ slaves {
    launchTimeoutSeconds = 5
    maxNumRetries = 3
    retryWaitTime = 3
+   env {
+     key = "value"
+   }
   }
   // short version
   sshTest2 {
@@ -175,6 +178,9 @@ slaves {
    // ssh slave specific values
    host = "localhost"
    credentialsId = "jenkins"
+   env {
+     key = "value"
+   }
   }
 }
 ```
