@@ -67,16 +67,3 @@ println "--> Set global env variables"
 properties.global.variables.each { key, value ->
   helpers.addGlobalEnvVariable(Jenkins, key, value)
 }
-
-// Set Global Slack configuration
-/* def slack = Jenkins.instance.getExtensionList(jenkins.plugins.slack.SlackNotifier.DescriptorImpl.class)[0]
-def params = [
-  slackTeamDomain: "<mydomain>",
-  slackToken: "<mytoken>",
-  slackRoom: "",
-  slackBuildServerUrl: "",
-  slackSendAs: ""/
-]
-def req = [getParameter: { name -> params[name] }] as org.kohsuke.stapler.StaplerRequest
-slack.configure(req, null)
-slack.save()*/
