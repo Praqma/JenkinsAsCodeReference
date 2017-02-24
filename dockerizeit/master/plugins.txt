@@ -76,6 +76,7 @@ pipeline-stage-tags-metadata:1.0.2
 pipeline-stage-view:2.5
 plain-credentials:1.4
 pretested-integration:2.4.1 (409ae)
+slack:2.1
 pubsub-light:1.7
 scm-api:2.0.7
 script-security:1.26
