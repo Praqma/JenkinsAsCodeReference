@@ -46,15 +46,17 @@ desc.setGlobalConfigEmail(properties.global.git.email)
 
 if(properties.global.smtp.enabled) {
   println "--> Set E-mail Notification"
-  File pwdFile = new File(properties.credentials.smtp.path)
-  if(!pwdFile.exists()) {
-    println "Smpt password file missing!"
-  } else {
-    def emailDesc = inst.getDescriptor(hudson.tasks.Mailer)
-    emailDesc.setSmtpHost(properties.global.smtp.host)
-    emailDesc.setSmtpPort(properties.global.smtp.port)
-    emailDesc.setSmtpAuth(properties.credentials.smtp.userId, new File(properties.credentials.smtp.path).text.trim())
-    emailDesc.setReplyToAddress(properties.global.smtp.reply_to_address)  
+  if(properties.global.smtp.authentication.enabled) {
+    File pwdFile = new File(properties.global.smtp.authentication.passwordFile)
+    if(!pwdFile.exists()) {
+      println "Smpt password file missing!"
+    } else {
+      def emailDesc = inst.getDescriptor(hudson.tasks.Mailer)
+      emailDesc.setSmtpHost(properties.global.smtp.host)
+      emailDesc.setSmtpPort(properties.global.smtp.port)
+      emailDesc.setSmtpAuth(properties.global.smtp.authentication.login, pwdFile.text.trim())
+      emailDesc.setReplyToAddress(properties.global.smtp.reply_to_address)  
+    }
   }
 }
 
