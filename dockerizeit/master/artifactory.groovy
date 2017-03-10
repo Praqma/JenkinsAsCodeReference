@@ -17,14 +17,13 @@ properties.artifactory.each() { configName, serverConfig ->
     println "--> Configure Artifactory: Server ${serverConfig.serverName}"
     def inst = Jenkins.getInstance()
     def desc = inst.getDescriptor("org.jfrog.hudson.ArtifactoryBuilder")
-    org.jfrog.hudson.CredentialsConfig deployerCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+    def deployerCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+                                                                  serverConfig.deployerCredentialsId,
+    def resolverCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
                                                                   serverConfig.deployerCredentialsId,
                                                                   serverConfig.overridingCredentials)
-    org.jfrog.hudson.CredentialsConfig resolverCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
-                                                                  serverConfig.deployerCredentialsId,
-                                                                  serverConfig.overridingCredentials)
-    List<org.jfrog.hudson.ArtifactoryServer> servers =  desc.getArtifactoryServers()
-    org.jfrog.hudson.ArtifactoryServer server = new org.jfrog.hudson.ArtifactoryServer(serverConfig.serverName,
+    def servers =  desc.getArtifactoryServers()
+    def server = new org.jfrog.hudson.ArtifactoryServer(serverConfig.serverName,
                                                      serverConfig.serverUrl,
                                                      deployerCredentials,
                                                      resolverCredentials,
