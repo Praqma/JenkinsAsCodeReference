@@ -1,8 +1,6 @@
 import java.lang.System
 import hudson.model.*
 import jenkins.model.*
-import org.jfrog.*
-import org.jfrog.hudson.*
 import com.cloudbees.plugins.credentials.CredentialsProvider
 import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials
 
@@ -19,14 +17,14 @@ properties.artifactory.each() { configName, serverConfig ->
     println "--> Configure Artifactory: Server ${serverConfig.serverName}"
     def inst = Jenkins.getInstance()
     def desc = inst.getDescriptor("org.jfrog.hudson.ArtifactoryBuilder")
-    CredentialsConfig deployerCredentials = new CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+    org.jfrog.hudson.CredentialsConfig deployerCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
                                                                   serverConfig.deployerCredentialsId,
                                                                   serverConfig.overridingCredentials)
-    CredentialsConfig resolverCredentials = new CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+    org.jfrog.hudson.CredentialsConfig resolverCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
                                                                   serverConfig.deployerCredentialsId,
                                                                   serverConfig.overridingCredentials)
-    List<ArtifactoryServer> servers =  desc.getArtifactoryServers()
-    ArtifactoryServer server = new ArtifactoryServer(serverConfig.serverName,
+    List<org.jfrog.hudson.ArtifactoryServer> servers =  desc.getArtifactoryServers()
+    org.jfrog.hudson.ArtifactoryServer server = new org.jfrog.hudson.ArtifactoryServer(serverConfig.serverName,
                                                      serverConfig.serverUrl,
                                                      deployerCredentials,
                                                      resolverCredentials,
