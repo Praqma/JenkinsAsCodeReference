@@ -1,7 +1,6 @@
 import java.lang.System
 import jenkins.model.*
 import hudson.security.*
-import jenkins.plugins.slack.SlackNotifier.*
 
 def home_dir = System.getenv("JENKINS_HOME")
 def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())

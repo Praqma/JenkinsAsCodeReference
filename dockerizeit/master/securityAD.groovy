@@ -8,7 +8,7 @@ def properties = new ConfigSlurper().parse(new File("$home_dir/security.properti
 
 if(properties.ad.enabled) {
   println "--> Configure AD"
-  ActiveDirectorySecurityRealm realm = new ActiveDirectorySecurityRealm(properties.ad.domain,
+  def realm = new hudson.plugins.active_directory.ActiveDirectorySecurityRealm(properties.ad.domain,
                                                                         Lists.newArrayList(new ActiveDirectoryDomain(properties.ad.domain, properties.ad.server)),
                                                                         properties.ad.site,
                                                                         properties.ad.bindName,
