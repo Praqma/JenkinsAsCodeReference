@@ -44,6 +44,22 @@ def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 desc.setGlobalConfigName(properties.global.git.name)
 desc.setGlobalConfigEmail(properties.global.git.email)
 
+if(properties.global.smtp.enabled) {
+  println "--> Set E-mail Notification"
+  if(properties.global.smtp.authentication.enabled) {
+    File pwdFile = new File(properties.global.smtp.authentication.passwordFile)
+    if(!pwdFile.exists()) {
+      println "Smpt password file missing!"
+    } else {
+      def emailDesc = inst.getDescriptor(hudson.tasks.Mailer)
+      emailDesc.setSmtpHost(properties.global.smtp.host)
+      emailDesc.setSmtpPort(properties.global.smtp.port)
+      emailDesc.setSmtpAuth(properties.global.smtp.authentication.login, pwdFile.text.trim())
+      emailDesc.setReplyToAddress(properties.global.smtp.reply_to_address)  
+    }
+  }
+}
+
 println "--> Set system message "
 def env = System.getenv()
 if ( env.containsKey('master_image_version') ) {
