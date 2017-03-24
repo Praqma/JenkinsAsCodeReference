@@ -3,8 +3,6 @@ import hudson.model.*
 import jenkins.model.*
 import javaposse.jobdsl.plugin.*
 import hudson.triggers.TimerTrigger
-import org.jenkinsci.plugins.workflow.job.WorkflowJob
-import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
 
 def instance = Jenkins.getInstance()
 def home_dir = System.getenv("JENKINS_HOME")
@@ -17,8 +15,8 @@ properties.seedjobs.each {
   def job = Jenkins.instance.getJob(it.value.name)
   if (job) { job.delete() }
   println "--> Create ${it.value.name} seed jod"
-  def project = Jenkins.instance.createProject(WorkflowJob.class, it.value.name)
-  project.setDefinition(new CpsFlowDefinition("""
+  def project = Jenkins.instance.createProject(org.jenkinsci.plugins.workflow.job.WorkflowJob.class, it.value.name)
+  project.setDefinition(new org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition("""
 import javaposse.jobdsl.plugin.*
 
 node("${properties.global.variables.utility_slave}") {

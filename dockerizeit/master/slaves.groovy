@@ -2,7 +2,6 @@ import java.lang.System
 import hudson.model.*
 import jenkins.model.*
 import hudson.slaves.*
-import hudson.plugins.sshslaves.*
 import hudson.model.Node.*
 
 // load helpers and read properties
@@ -21,7 +20,7 @@ properties.slaves.each {
         launcher = new JNLPLauncher()
       break
     case "ssh":
-        launcher = new SSHLauncher(it.value.host,                 // The host to connect to
+        launcher = new hudson.plugins.sshslaves.SSHLauncher(it.value.host,                 // The host to connect to
                                    it.value.get('port', 22),      // The port to connect on
                                    it.value.credentialsId,        // The credentials id to connect as
                                    it.value.get('jvmOptions',""),  // Options passed to the java vm
