@@ -6,10 +6,14 @@ if [[ $# -lt 1 ]] || [[ "$1" == "-"* ]]; then
   # jenkins swarm slave
   JAR=`ls -1 /usr/share/jenkins/swarm-client-*.jar | tail -n 1`
   
+  # Set master URL - jmaster name defined in docker-compose and available for reference in Docker network
   PARAMS="-master http://jmaster:8080"
 
   # Set default number of executors (2 by default)
   PARAMS="$PARAMS -executors ${NUM_OF_EXECUTORS:-2}"
+  
+  # Set mode for jobs execution - leave this machine for tied jobs only
+  PARAMS="$PARAMS -mode exclusive "
 
   # Set labels to slave
   PARAMS="$PARAMS -labels \"linux\" -labels \"alpine\" -labels \"3.3\" -labels \"java\" -labels \"docker\" -labels \"swarm\" -labels \"utility-slave\""
