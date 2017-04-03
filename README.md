@@ -4,7 +4,8 @@
 The intention of this project is to create the easily configurable template, summarize the current best thinking and create unification for the stateless Jenkins deployments.
 
 ### Getting started
-
+########################## TO DO #########
+* Fix JNLP port (https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+CLI)
 #### Requirements
 
 * Linux host
