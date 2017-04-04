@@ -16,13 +16,17 @@ services:
         max-size:  "200m"
         max-file: "3"
     ports:
-      - "8080:8080"
-      - "50000:50000"
+      - "8090:8080"
+      - "50001:50000"
     volumes:
       - $HOME/.ssh:/var/jenkins_home/.ssh
+      - $HOME/.ssh/.password:/var/jenkins_home/.ssh/.password
       - $HOME/jenkins-backup/jobs:/var/jenkins_home/jobs
       - $HOME/jenkins-backup/userContent:/var/jenkins_home/userContent
       - /etc/localtime:/etc/localtime
+    command: [--prefix=/jenkins]
+    hostname: Jenkins_master_1
+
 
   jslave:
     build:
@@ -43,14 +47,42 @@ services:
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
       - $HOME/jenkins-backup/workspace:/root/workspace
       - /etc/localtime:/etc/localtime
+    hostname: Slave1
 
-  registry:
-    image: registry:2.4.0
-    ports:
-      - 5000:5000
+  jslave2:
+    build:
+      context: slave/
+      dockerfile: jslave2_Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
     volumes:
-      - $HOME/jenkins-backup/registry:/var/lib/registry
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker:/var/lib/docker
+      - $HOME/jenkins-backup/slave/gradle:/root/.gradle
+      - $HOME/jenkins-backup/workspace:/root/workspace
       - /etc/localtime:/etc/localtime
+    hostname: Slave2
+
+  #registry:
+    #image: registry:2.4.0
+    #ports:
+      #- 5000:5000
+    #volumes:
+      #- $HOME/jenkins-backup/registry:/var/lib/registry
+
+  #registry-web:
+    #image: konradkleine/docker-registry-frontend:v2
+    #ports:
+      #- 8081:80
+    #environment:
+      #- ENV_DOCKER_REGISTRY_HOST=registry
+      #- ENV_DOCKER_REGISTRY_PORT=5000
+      #- ENV_MODE_BROWSE_ONLY=true
+
+#      - $HOME/jenkins-backup/registry:/var/lib/registry
+#      - /etc/localtime:/etc/localtime
 
   registry-web:
     image: konradkleine/docker-registry-frontend:v2

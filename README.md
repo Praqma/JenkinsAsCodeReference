@@ -1,20 +1,24 @@
+# Jenkins Infrastructure as Code template
+
 [![Build Status](https://api.travis-ci.org/Praqma/JenkinsAsCodeReference.svg?branch=master)](https://travis-ci.org/Praqma/JenkinsAsCodeReference)
 ---
 maintainer: andrey9kin, alexsedova
 ---
-
-# Jenkins as Code template
 
 ### Description
 The intention of this project is to create the easily configurable template, summarize the current best thinking and create unification for the stateless Jenkins deployments.
 
 ### Getting started
 
+########################## TO DO #########
+* Fix JNLP port (https://wiki.jenkins-ci.org/display/JENKINS/Jenkins+CLI)
+
 #### Recommended setup
 
 * Linux host that supports Docker
 * Docker 1.12.+ (minimal tested version is 1.11.0)
 * Docker Compose 1.8.0 (minimal tested version is 1.7.0)
+>>>>>>> master
 * Make sure that you are using umask 022 or similar since during the build process configuration files will be copied to the Jenkins container as a root user but Jenkins runs by another user, so we need to make sure that those files are readable for group and others.
 
 #### Preparations
@@ -44,8 +48,9 @@ export no_proxy=<empty or proxy address>
 export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<proxy port> -Dhttp.nonProxyHosts=localhost,127.0.0.1,*.whatever.com -Dhttp.proxyHost=<proxy address> -Dhttp.proxyPort=<proxy port>
 EOM
 source ~/.bashrc
+
 ```
-Important! We are using Alpine Linux and apk (package manager) requires proxy address to include schema, i.e. http_proxy=http://my.proxy.com not just http_proxy=my.proxy.com. This only affects http_proxy, https_proxy variables. More details [here](https://github.com/gliderlabs/docker-alpine/issues/171) 
+Important! We are using Alpine Linux and apk (package manager) requires proxy address to include schema, i.e. http_proxy=http://my.proxy.com not just http_proxy=my.proxy.com. This only affects http_proxy, https_proxy variables. More details [here](https://github.com/gliderlabs/docker-alpine/issues/171)
 
 * Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. Also we will use jenkins-backup/workspace directory for mapping to /root/workspace inside slave docker container - it needs to be done for working docker pipeline plugin properly. See [JENKINS-35217](https://issues.jenkins-ci.org/browse/JENKINS-35217) for details. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
 
@@ -55,7 +60,7 @@ mkdir -p $HOME/jenkins-backup/userContent
 mkdir -p $HOME/jenkins-backup/slave/gradle
 mkdir -p $HOME/jenkins-backup/registry
 mkdir -p $HOME/jenkins-backup/workspace
-# We are running Jenkins as user id 1000 so let him own backup directory to avoid conflicts 
+# We are running Jenkins as user id 1000 so let him own backup directory to avoid conflicts
 chown -R 1000:1000 $HOME/jenkins-backup
 ```
 
@@ -91,15 +96,3 @@ up -d
 Find detailed description of configuration scripts and configuration file [here](dockerizeit/master/README.md)
 
 ### Roadmap and contributions
-
-#### Workflow
-Issues labeling follows Pragmatic workflow described [here](http://www.praqma.com/stories/a-pragmatic-workflow/)
-Describe your idea as ticket, make sure to put `Action - needs grooming` label and let's discuss it together
-
-#### Contributions verification
-We do have [Travis CI job](https://travis-ci.org/Praqma/JenkinsAsCodeReference) running for all branches so make sure it goes green for all your contributions.
-You can also use review job created on the startup. This job relies on principals described in [this article](http://www.josra.org/blog/An-automated-git-branching-strategy.html)
-
-#### Project progress
-You can see project status on [its Waffle board](https://waffle.io/Praqma/JenkinsAsCodeReference).
-At some point of time, we will kick off maintainers meetings. Stay tuned

@@ -8,8 +8,8 @@ TBD
 
 ## Upgrading plugins, removing/installing plugins
 
-Plugins configuration managed through the master/plugins.txt. To update its content first go to Manage Jenkins -> Manage Plugins and install necessary updates, uninstall plugins and etc.
-When ready run the following in Manage Jenkins -> Script console and then copy output to plugins.txt
+Plugins configuration managed through the master/plugins.txt. Just add the correct plugin name - version number is optional and can be explicitly mentioned if required.
+In case you need a list of plugins from an existing Jenkins instance just run the following in Manage Jenkins -> Script console and then copy output to plugins.txt
 
 ```
 plugins = [:]
