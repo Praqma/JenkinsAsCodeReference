@@ -8,10 +8,10 @@ ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
 
 # install docker
-RUN apk update && apk add curl && curl -o docker-1.11.0.tgz https://get.docker.com/builds/Linux/x86_64/docker-1.11.0.tgz && tar zxvf docker-1.11.0.tgz && mv docker/* /usr/bin/ && rm -rf docker-*
+RUN apk update && apk add curl && curl -o docker-1.12.1.tgz https://get.docker.com/builds/Linux/x86_64/docker-1.12.1.tgz && tar zxvf docker-1.12.1.tgz && mv docker/* /usr/bin/ && rm -rf docker-*
 
 # install docker compose
-RUN apk update && apk add py-pip && pip install docker-compose==1.7
+RUN apk update && apk add py-pip && pip install docker-compose==1.8.0
 
 # copy bootstrap script
 COPY bootstrap.sh /bootstrap.sh

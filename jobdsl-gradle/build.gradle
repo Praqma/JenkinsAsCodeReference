@@ -32,6 +32,7 @@ fileTree(dir: "${project.projectDir}/src/jobs/groovy", include: '**/*.groovy').e
 
     def buildSingleXml = tasks.create(name: "build${baseName.capitalize()}Xml", type: JavaExec) {
         main = 'javaposse.jobdsl.Run'
+        mainClassName = main
         classpath = sourceSets.main.runtimeClasspath
         args "${project.buildDir}/jobs/${file.name}"
         workingDir "$project.buildDir/jobs"

@@ -16,13 +16,21 @@ plugins = [:]
 jenkins.model.Jenkins.instance.getPluginManager().getPlugins().each {plugins << ["${it.getShortName()}":"${it.getVersion()}"]}
 plugins.sort().each() { println "${it.key}:${it.value}"}
 ```
-###Manual installation of custom plugin
-If you have a custom .hpi / .jpi plugin that the master needs to run with copy the file into the ```dockerizeit/master/``` and add the following line to ```dockerizeit/master/Dockerfile``` just after
- ```RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt ```:
+### Installation of custom plugin
+If you have a custom .hpi / .jpi plugin that the master needs to run with copy the file into the
+```dockerizeit/master/``` and add the following line to the end of ```dockerizeit/master/Dockerfile```:
+ 
 ```
-COPY *.hpi  $JENKINS_HOME/plugins/
+COPY *.hpi /usr/share/jenkins/ref/plugins/
 ```
 
+or if you plugin is available in Nexus/Artifactory/JitPack then you could download it to corresponding directory.
+See example below
+
+```
+RUN wget https://jitpack.io/com/github/praqma/tracey-jenkins-trigger-plugin/1.0.0/tracey-jenkins-trigger-plugin-1.0.0.hpi \
+         -O /usr/share/jenkins/ref/plugins/tracey.hpi
+```
 
 ## Configuration through the Groovy files
 
@@ -102,6 +110,25 @@ global {
   }
 }
 ```
+
+Configuration of [Groovy Shared Library plugin](https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Shared+Groovy+Libraries+Plugin) implemented in [globalPipelineLibraries.groovy](globalPipelineLibraries.groovy).
+Use the following block in jenkins.properties to define your libraries
+
+```
+libraries{
+  library1 {
+      enabled = true
+      name = "name-of-library"
+      version = "master"
+      implicitly = true
+      allow_overridden = false
+      scm_path = "https://github.com/Andrey9kin/shared-groovy-lib-test.git"
+      credentialsId = ""
+      branch = "master"
+  }
+}
+```
+
 ### Slaves
 
 Slaves created by the [slaves.groovy](slaves.groovy)
@@ -134,6 +161,9 @@ slaves {
    launchTimeoutSeconds = 5
    maxNumRetries = 3
    retryWaitTime = 3
+   env {
+     key = "value"
+   }
   }
   // short version
   sshTest2 {
@@ -148,6 +178,9 @@ slaves {
    // ssh slave specific values
    host = "localhost"
    credentialsId = "jenkins"
+   env {
+     key = "value"
+   }
   }
 }
 ```
