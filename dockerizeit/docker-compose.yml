@@ -62,7 +62,6 @@ services:
       - /var/lib/docker:/var/lib/docker
       - $HOME/jenkins-backup/slave/gradle:/root/.gradle
       - $HOME/jenkins-backup/workspace:/root/workspace
-      -
       - /etc/localtime:/etc/localtime
     hostname: Slave2
 
