@@ -114,17 +114,42 @@ public class JobBuilder {
     }
 
     /**
-     * Use this function to add more default parameters to the job configuration
+     * LogRotator is the default implementation of BuildDiscarder.
+     * For historical reason, this is called LogRotator, but it does not rotate logs.
+     * Since 1.350 it has also the option to keep the build, but delete its recorded artifacts.
      *
-     * @boolean debug   debug mode
+     * https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob-logRotator
+     * https://github.com/jenkinsci/job-dsl-plugin/wiki/The-Configure-Block#configure-log-rotator-plugin
+     *
+     * @int     keepDays          Build records kept up to this number of days.
+     * @int     keepNum           Number of build records are kept.
+     * @int     keepArtifactDays  Artifacts kept up to this number of days.
+     * @int     keepArtifactNum   Number of builds have artifacts retained.
+     * @boolean debug             Enable debug mode.
      */
-    public JobBuilder addLogRotator(int num = 20, boolean debug = false) {
+    public JobBuilder addLogRotator(
+        int keepDays = -1,
+        int keepNum = 21,
+        int keepArtifactDays = -1,
+        int keepArtifactNum = -1,
+        boolean debug = false)
+    {
         if (debug) {
             // TODO: set something for the debug mode
             println 'Debug is set to true'
         }
         job.logRotator {
-            numToKeep(num)
+            // If specified, build records are only kept up to this number of days.
+            daysToKeep(keepDays)
+
+            // If specified, only up to this number of build records are kept.
+            numToKeep(keepNum)
+
+            // If specified, artifacts from builds older than this number of days will be deleted, but the logs, history, reports, etc for the build will be kept.
+            artifactDaysToKeep(keepArtifactDays)
+
+            // If specified, only up to this number of builds have their artifacts retained.
+            artifactNumToKeep(keepArtifactNum)
         }
         this
     }

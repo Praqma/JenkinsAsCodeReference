@@ -74,7 +74,10 @@ class JobsHelperTest extends Specification {
         builder.addLogRotator()
 
         then:
-        builder.job.node.logRotator[0].numToKeep[0].value() == 20
+        builder.job.node.logRotator[0].daysToKeep[0].value() == -1
+        builder.job.node.logRotator[0].numToKeep[0].value() == 21
+        builder.job.node.logRotator[0].artifactDaysToKeep[0].value() == -1
+        builder.job.node.logRotator[0].artifactNumToKeep[0].value() == -1
 
     }
 
