@@ -1,16 +1,12 @@
 import java.lang.System
 import hudson.model.*
 import jenkins.model.*
-import org.jfrog.*
-import org.jfrog.hudson.*
-import com.cloudbees.plugins.credentials.CredentialsProvider
-import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials
 
 def home_dir = System.getenv("JENKINS_HOME")
 def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
 
 def getPasswordCredentials(String id) {
-  def all = CredentialsProvider.lookupCredentials(StandardUsernameCredentials.class)
+  def all = com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(com.cloudbees.plugins.credentials.common.StandardUsernameCredentials.class)
   return all.findResult { it.id == id ? it : null }
 }
 
@@ -19,14 +15,15 @@ properties.artifactory.each() { configName, serverConfig ->
     println "--> Configure Artifactory: Server ${serverConfig.serverName}"
     def inst = Jenkins.getInstance()
     def desc = inst.getDescriptor("org.jfrog.hudson.ArtifactoryBuilder")
-    CredentialsConfig deployerCredentials = new CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+    
+    def deployerCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
                                                                   serverConfig.deployerCredentialsId,
                                                                   serverConfig.overridingCredentials)
-    CredentialsConfig resolverCredentials = new CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
+    def resolverCredentials = new org.jfrog.hudson.CredentialsConfig(getPasswordCredentials(serverConfig.deployerCredentialsId),
                                                                   serverConfig.deployerCredentialsId,
                                                                   serverConfig.overridingCredentials)
-    List<ArtifactoryServer> servers =  desc.getArtifactoryServers()
-    ArtifactoryServer server = new ArtifactoryServer(serverConfig.serverName,
+    def servers =  desc.getArtifactoryServers()
+    def server = new org.jfrog.hudson.ArtifactoryServer(serverConfig.serverName,
                                                      serverConfig.serverUrl,
                                                      deployerCredentials,
                                                      resolverCredentials,

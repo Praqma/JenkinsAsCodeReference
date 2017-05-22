@@ -1,6 +1,5 @@
 import java.lang.System
 import jenkins.model.*
-import hudson.security.*
 import org.jenkinsci.plugins.*
 import hudson.model.*
 
@@ -9,7 +8,7 @@ def properties = new ConfigSlurper().parse(new File("${home_dir}/security.proper
 
 if(properties.matrixbasedsecurity.enabled){
   println "--> Configure Matrix-Based security"
-  def strategy = new GlobalMatrixAuthorizationStrategy()
+  def strategy = new hudson.security.GlobalMatrixAuthorizationStrategy()
 
   properties.matrixbasedsecurity.users.each() { key, value ->
     value.permissions.each() {
