@@ -120,11 +120,10 @@ libraries{
       enabled = true
       name = "name-of-library"
       version = "master"
-      implicitly = true
+      implicitly = false
       allow_overridden = false
       scm_path = "https://github.com/Andrey9kin/shared-groovy-lib-test.git"
       credentialsId = ""
-      branch = "master"
   }
 }
 ```
