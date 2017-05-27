@@ -280,6 +280,7 @@ artifactory {
     serverName = "my-lovely-artifactory"
     serverUrl = "http://1.1.1.1:8081/artifactory"
     bypassProxy = false
+    connectionRetry = 5
   }
 }
 ```
@@ -312,6 +313,16 @@ The script will read http_proxy, https_proxy, no_proxy, JAVA_OPTS environment va
 ### Security configuration
 
 Security configuration stored in the separate file - [security.properties](security.properies)
+
+#### Script security for JobDSL
+
+JobDSL plugin supports script secutiry starting from 1.60. You can disable sandbox mode by using config below
+
+```
+scriptSecutiry {
+  jobDSL = false
+}
+```
 
 #### LDAP
 
