@@ -280,6 +280,7 @@ artifactory {
     serverName = "my-lovely-artifactory"
     serverUrl = "http://1.1.1.1:8081/artifactory"
     bypassProxy = false
+    connectionRetry = 5
   }
 }
 ```
