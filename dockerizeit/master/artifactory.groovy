@@ -31,7 +31,8 @@ properties.artifactory.each() { configName, serverConfig ->
                                                      deployerCredentials,
                                                      resolverCredentials,
                                                      serverConfig.connectionTimeOut,
-                                                     serverConfig.bypassProxy)
+                                                     serverConfig.bypassProxy,
+                                                     serverConfig.connectionRetry)
     if (servers == null || servers.empty) {
       servers = [server]
     } else {
