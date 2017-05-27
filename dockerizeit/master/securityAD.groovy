@@ -17,7 +17,8 @@ if(properties.ad.enabled) {
                                                                         GroupLookupStrategy.valueOf(properties.ad.groupLookupStrategy.toString().toUpperCase()),
 									true,
 									true,
-									new CacheConfiguration(1000, 6000))
+									new CacheConfiguration(1000, 6000),
+									false)
   Jenkins.instance.setSecurityRealm(realm)
   Jenkins.instance.save()
 }
