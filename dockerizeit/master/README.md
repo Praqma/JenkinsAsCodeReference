@@ -285,6 +285,26 @@ artifactory {
 }
 ```
 
+### Gerrit
+
+Configured by the [gerrit.groovy](gerrit.groovy)
+The script will read the following section from the [jenkins.properties](jenkins.properties) and create corresponding data structure.
+
+```
+gerrit {
+  example {
+    enabled = false
+    hostName = "gerrit.example.com"
+    sshPort = 29418
+    frontendURL = "http://gerrit.example.com:8081/"
+    proxy = "http://proxy:8080"
+    userName = "user"
+    sshKeyFile = "/var/jenkins_home/.ssh/id_rsa"
+    email = "user@example.com"
+  }
+}
+```
+
 ### Proxy
 
 Configured by the [proxy.groovy](proxy.groovy)
