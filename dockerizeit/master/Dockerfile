@@ -1,4 +1,4 @@
-FROM jenkins:2.46.1-alpine
+FROM jenkins:2.46.3-alpine
 
 # Add support for proxies.
 # Values should be passed as build args
