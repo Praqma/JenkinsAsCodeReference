@@ -1,0 +1,31 @@
+import java.lang.System
+import java.io.File
+import hudson.model.*
+import jenkins.model.*
+import com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl
+import com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer
+import com.sonyericsson.hudson.plugins.gerrit.trigger.config.Config
+
+
+def home_dir = System.getenv("JENKINS_HOME")
+def properties = new ConfigSlurper().parse(new File("$home_dir/jenkins.properties").toURI().toURL())
+
+properties.gerrit.each() { configName, serverConfig ->
+  if (serverConfig.enabled) {
+    println "--> Configure Gerrit Server: ${serverConfig.hostName}"
+
+    GerritServer gerritServer = new GerritServer(serverConfig.hostName)
+    Config config = new Config()
+    config.setGerritHostName(serverConfig.hostName)
+    config.setGerritSshPort(serverConfig.sshPort)
+    config.setGerritFrontEndURL(serverConfig.frontendURL)
+    config.setGerritProxy(serverConfig.proxy)
+    config.setGerritUserName(serverConfig.userName)
+    config.setGerritAuthKeyFile(new File(serverConfig.sshKeyFile))
+    config.setGerritEMail(serverConfig.email)
+    gerritServer.setConfig(config)
+
+    PluginImpl.getInstance().addServer(gerritServer)
+    gerritServer.start()
+  }
+}
