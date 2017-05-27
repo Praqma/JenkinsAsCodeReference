@@ -10,8 +10,18 @@ properties.gerrit.each() { configName, serverConfig ->
   if (serverConfig.enabled) {
     println "--> Configure Gerrit Server: ${serverConfig.hostName}"
 
-    def gerritServer = new com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer(serverConfig.hostName)
-    def config = new com.sonyericsson.hudson.plugins.gerrit.trigger.config.Config()
+    // Dynamically load classes to avoid dependency to Gerrit Trigger plugin
+    try {
+      def GerritServer = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer")
+      def Config = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.config.Config")
+      def PluginImpl = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl")
+    } catch (ClassNotFoundException ex) {
+      println "ERROR: Can not configure Gerrit Trigger no plugin installed"
+      return
+    }
+
+    def gerritServer = GerritServer.newInstance(serverConfig.hostName)
+    def config = Config.newInstance()
     config.setGerritHostName(serverConfig.hostName)
     config.setGerritSshPort(serverConfig.sshPort)
     config.setGerritFrontEndURL(serverConfig.frontendURL)
@@ -21,7 +31,7 @@ properties.gerrit.each() { configName, serverConfig ->
     config.setGerritEMail(serverConfig.email)
     gerritServer.setConfig(config)
 
-    com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl.getInstance().addServer(gerritServer)
+    PluginImpl.getInstance().addServer(gerritServer)
     gerritServer.start()
   }
 }
