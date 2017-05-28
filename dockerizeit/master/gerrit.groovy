@@ -10,11 +10,15 @@ properties.gerrit.each() { configName, serverConfig ->
   if (serverConfig.enabled) {
     println "--> Configure Gerrit Server: ${serverConfig.hostName}"
 
+    def GerritServer = null
+    def Config = null
+    def PluginImpl = null
+
     // Dynamically load classes to avoid dependency to Gerrit Trigger plugin
     try {
-      def GerritServer = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer")
-      def Config = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.config.Config")
-      def PluginImpl = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl")
+      GerritServer = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.GerritServer")
+      Config = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.config.Config")
+      PluginImpl = Class.forName("com.sonyericsson.hudson.plugins.gerrit.trigger.PluginImpl")
     } catch (ClassNotFoundException ex) {
       println "ERROR: Can not configure Gerrit Trigger no plugin installed"
       return
