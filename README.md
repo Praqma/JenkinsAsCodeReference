@@ -1,6 +1,6 @@
 [![Build Status](https://api.travis-ci.org/Praqma/JenkinsAsCodeReference.svg?branch=master)](https://travis-ci.org/Praqma/JenkinsAsCodeReference)
 ---
-maintainer: andrey9kin, alexsedova
+maintainer: ewelinawilkosz2
 ---
 
 # Jenkins as Code template
@@ -45,7 +45,7 @@ export JAVA_OPTS=<empty or -Dhttps.proxyHost=<proxy address> -Dhttps.proxyPort=<
 EOM
 source ~/.bashrc
 ```
-Important! We are using Alpine Linux and apk (package manager) requires proxy address to include schema, i.e. http_proxy=http://my.proxy.com not just http_proxy=my.proxy.com. This only affects http_proxy, https_proxy variables. More details [here](https://github.com/gliderlabs/docker-alpine/issues/171) 
+Important! We are using Alpine Linux and apk (package manager) requires proxy address to include schema, i.e. http_proxy=http://my.proxy.com not just http_proxy=my.proxy.com. This only affects http_proxy, https_proxy variables. More details [here](https://github.com/gliderlabs/docker-alpine/issues/171)
 
 * Create backup directories - they will be used to store build history, user content, Gradle cache and Docker images from the local registry. Also we will use jenkins-backup/workspace directory for mapping to /root/workspace inside slave docker container - it needs to be done for working docker pipeline plugin properly. See [JENKINS-35217](https://issues.jenkins-ci.org/browse/JENKINS-35217) for details. You can find the list of all volumes used by this setup inside [dockerizeit/docker-compose.yml](dockerizeit/docker-compose.yml)
 
@@ -55,7 +55,7 @@ mkdir -p $HOME/jenkins-backup/userContent
 mkdir -p $HOME/jenkins-backup/slave/gradle
 mkdir -p $HOME/jenkins-backup/registry
 mkdir -p $HOME/jenkins-backup/workspace
-# We are running Jenkins as user id 1000 so let him own backup directory to avoid conflicts 
+# We are running Jenkins as user id 1000 so let him own backup directory to avoid conflicts
 chown -R 1000:1000 $HOME/jenkins-backup
 ```
 
