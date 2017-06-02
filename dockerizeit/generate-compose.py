@@ -28,7 +28,7 @@ import re
 
 def get_binds(service_name):
   logging.info("Read {} container config...".format(service_name))
-  command = ["docker", "ps", "-a", "-q", "--no-trunc", "-f", "name=dockerizeit_{}_".format(service_name)]
+  command = ["docker", "ps", "-a", "-q", "--no-trunc", "-f", "name=dockerizeit_{}_1".format(service_name)]
   logging.debug("Get {} container id: {}".format(service_name, " ".join(command)))
   container_id = check_output(command).strip()
   logging.debug("{} container id: {}".format(service_name, container_id))
