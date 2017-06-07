@@ -3,6 +3,7 @@ import hudson.model.*
 import jenkins.model.*
 import hudson.slaves.*
 import hudson.plugins.sshslaves.*
+import hudson.plugins.sshslaves.verifiers.NonVerifyingKeyVerificationStrategy
 import hudson.model.Node.*
 
 // load helpers and read properties
@@ -30,7 +31,8 @@ properties.slaves.each {
                                    it.value.get('suffixStartSlaveCmd', ""), // This will suffix the start slave command
                                    it.value.get('launchTimeoutSeconds', null), // Launch timeout in seconds
                                    it.value.get('maxNumRetries', null),       // The number of times to retry connection if the SSH connection is refused
-                                   it.value.get('retryWaitTime', null))        // The number of seconds to wait between retries
+                                   it.value.get('retryWaitTime', null),       // The number of seconds to wait between retries
+                                   new NonVerifyingKeyVerificationStrategy())
       break
     default:
       throw new UnsupportedOperationException("${it.value.type} slave type is not supported!")
