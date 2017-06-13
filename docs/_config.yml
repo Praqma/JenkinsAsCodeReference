@@ -1,0 +1,13 @@
+# Site settings
+title: JenkisAsCode
+tag_text: Jenkins as Code
+description: Jenkins as Code allows you to spin up your own Jenkins instance in minutes and once you configure it (as code!) you'll be able to redeploy it whenever you need, without wasting time for redoing what you've already done 
+css-path: /css/praqmacode.css
+
+# Build settings
+permalink: /:categories/:title/
+markdown: kramdown
+highlighter: rouge
+exclude: ["README.md"]
+sass:
+  style: compressed
