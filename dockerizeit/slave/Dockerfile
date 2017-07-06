@@ -13,7 +13,6 @@ ENV no_proxy ${no_proxy:-}
 # install docker
 
 RUN apk update && apk --update add tar && apk add curl && curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin && rm -rf docker-*
-# RUN apk update && apk add curl && curl -o docker-1.12.1.tgz https://get.docker.com/builds/Linux/x86_64/docker-1.12.1.tgz && tar zxvf docker-1.12.1.tgz && mv docker/* /usr/bin/ && rm -rf docker-*
 # install git, curl, ssh, bash
 RUN apk update && apk add git curl openssh bash
 
