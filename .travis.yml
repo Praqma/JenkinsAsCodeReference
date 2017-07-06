@@ -11,7 +11,7 @@ cache:
   - $HOME/.gradle
 
 env:
-  DOCKER_COMPOSE_VERSION: 1.8.0
+  DOCKER_COMPOSE_VERSION: 1.13.0
   DOCKER_VERSION: 1.12.1-0~trusty
 before_install:
   - apt-cache madison docker-engine
