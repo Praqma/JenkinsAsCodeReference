@@ -9,7 +9,7 @@ def helpers = shell.parse(new File("/var/jenkins_home/init.groovy.d/helpers.groo
 println "--> Setting up proxy"
 
 def gradle_opts = ""
-def proxy_vars = ['HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY', 'JAVA_OPTS']
+def proxy_vars = ['HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY', 'JAVA_PROXY']
 for (e in System.getenv()) {
   def key = e.key.toUpperCase()
   if ( ! proxy_vars.contains(key) ) {
