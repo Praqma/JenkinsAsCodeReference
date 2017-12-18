@@ -62,7 +62,7 @@ def main():
   # When munchausen restarts services he will be inside Linux virtual machine and home directory will be resolved differently
   logging.info("Update definition for jmaster. Resolve binds...")
   jmaster_binds = get_binds("jmaster")
-  doc["services"]["jmaster"]["volumes"] = jmaster_binds.strip('[|]').replace(":rw","").split()
+  doc["services"]["jmaster"]["volumes"] = jmaster_binds.strip('"[|]')).replace(":rw","").split()
   # We have to check that we don't have not mounted volumes like 1ab3ba428445786de381d741cd2d3c4dff2e956342f02712ef205fa63ba47779:/var/jenkins_home
   # This volume comes from Jenkins Dockerfile - it is declared there but we do not mount it explicitly
   # If bring it to the compose file like this 1ab3ba428445786de381d741cd2d3c4dff2e956342f02712ef205fa63ba47779:/var/jenkins_home then
@@ -80,13 +80,13 @@ def main():
   del doc["services"]["jslave"]["build"]
   doc["services"]["jslave"]["image"] = "{}:{}".format(arguments['--jslave-image'], arguments['--jslave-version'])
   jslave_binds = get_binds("jslave")
-  doc["services"]["jslave"]["volumes"] =jslave_binds.strip('[|]').replace(":rw","").split()
+  doc["services"]["jslave"]["volumes"] =jslave_binds.strip('"[|]')).replace(":rw","").split()
 
   # Registry might be removed and replaced by something else so we have to check that it is there
   if "registry" in doc["services"]:
     logging.debug("Before: {}".format(doc["services"]["registry"]))
     registry_binds = get_binds("registry")
-    doc["services"]["registry"]["volumes"] = registry_binds.strip('[|]').replace(":rw","").split()
+    doc["services"]["registry"]["volumes"] = registry_binds.strip('"[|]')).replace(":rw","").split()
     logging.debug("After: {}".format(doc["services"]["registry"]))
 
   with open('docker-compose.yml', 'w') as outfile:
