@@ -13,22 +13,24 @@ def desc = inst.getDescriptor("com.cloudbees.jenkins.plugins.bitbucket.endpoints
 // For bitbucket servers, ensure that manageHooks is disabled in properties to avoid confusion
 // https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/index.html#bitbucket
 properties.bitbucketEndpoints.each {
-  println "--> Create bitbucket server ${it.key}"
-  println it
+  if(it.value.enabled) {
+    println "--> Create bitbucket server ${it.key}"
+    println it
 
-  AbstractBitbucketEndpoint endpoint
+    AbstractBitbucketEndpoint endpoint
 
-  if (it.value.get('type', 'server') == 'cloud') {
+    if (it.value.get('type', 'server') == 'cloud') {
       endpoint = new BitbucketCloudEndpoint(it.value.get('manageHooks', false),
-                                           it.value.get('credentialsId', ""))
-  } else {
+                                            it.value.get('credentialsId', ""))
+    } else {
       endpoint = new BitbucketServerEndpoint(it.value.get('name', ""), 
-                                          it.value.get('serverUrl', ""), 
-                                          it.value.get('manageHooks', false),
-                                          it.value.get('credentialsId', ""))
+                                             it.value.get('serverUrl', ""), 
+                                             it.value.get('manageHooks', false),
+                                             it.value.get('credentialsId', ""))
+    }
+     
+    desc.updateEndpoint((AbstractBitbucketEndpoint)endpoint)
   }
-  
-  desc.updateEndpoint((AbstractBitbucketEndpoint)endpoint)
 }
 
 desc.save()
