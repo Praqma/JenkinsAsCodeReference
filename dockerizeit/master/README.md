@@ -308,7 +308,7 @@ gerrit {
 ### Proxy
 
 Configured by the [proxy.groovy](proxy.groovy)
-The script will read http_proxy, https_proxy, no_proxy, JAVA_OPTS environment variables (set during the container build. See [Dockerfile](Dockerfile) for more details) and define then as Jenkins global variables.
+The script will read http_proxy, https_proxy, no_proxy, JAVA_PROXY environment variables (set during the container build. See [Dockerfile](Dockerfile) for more details) and define then as Jenkins global variables.
 
 ### Security configuration
 

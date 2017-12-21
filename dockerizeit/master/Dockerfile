@@ -6,8 +6,9 @@ FROM jenkins:2.46.3-alpine
 ENV http_proxy ${http_proxy:-}
 ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
-ARG JAVA_OPTS
-ENV JAVA_OPTS "-Djenkins.install.runSetupWizard=false ${JAVA_OPTS:-}"
+ARG JAVA_PROXY
+ENV JAVA_PROXY ${JAVA_PROXY:-}
+ENV JAVA_OPTS "-Djenkins.install.runSetupWizard=false ${JAVA_PROXY:-}"
 
 # Define build argument and env variable master_image_version
 # Use to pass info about Jenkins version so it can be represented
