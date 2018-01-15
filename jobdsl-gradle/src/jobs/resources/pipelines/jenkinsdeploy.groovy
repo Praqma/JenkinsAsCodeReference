@@ -8,10 +8,26 @@ node(env.utility_slave) {
              userRemoteConfigs: [[credentialsId: env.default_credentials, url: env.default_repo]]])
    }
 
-   stage('Verify JobDSL') {
-       sh 'cd jobdsl-gradle && ./gradlew buildXml'
-       sh 'cd jobdsl-gradle && ./gradlew test'
-   }
+    stage('Verify JobDSL') {
+        proxyHTTP = ""
+        if(env.http_proxy) {
+            def tokens = env.http_proxy.replace("http://", "").replace("https://", "").split(':')
+            def host = tokens[0]
+            def port = tokens[1]
+            proxyHTTP = "-Dhttp.proxyHost=${host} -Dhttp.proxyPort=${port}"
+        }
+
+        proxyHTTPS = ""
+        if(env.https_proxy) {
+            def tokens = env.https_proxy.replace("http://", "").replace("https://", "").split(':')
+            def host = tokens[0]
+            def port = tokens[1]
+            proxyHTTPS = "-Dhttps.proxyHost=${host} -Dhttps.proxyPort=${port}"
+        }
+
+        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} buildXml"
+        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} test"
+    }
 
    stage('Build master Docker image') {
        // docker pipeline plugin build command does not implement to take arguments yet
