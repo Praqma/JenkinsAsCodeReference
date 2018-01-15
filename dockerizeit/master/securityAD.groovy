@@ -19,6 +19,12 @@ if(properties.ad.enabled) {
 									true,
 									new CacheConfiguration(1000, 6000),
 									false)
+                    
+  realm.getDomains().each({
+  	it.bindName = realm.bindName
+  	it.bindPassword = realm.bindPassword
+  })
+  
   Jenkins.instance.setSecurityRealm(realm)
   Jenkins.instance.save()
 }
