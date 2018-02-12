@@ -23,7 +23,7 @@ try {
             // execute tests using the job-dsl-plugin for private branches
             stage ( 'Checkout' ) {
                 scm checkout
-            }            
+            }
             stage ( 'Build XML' ) {
                 dir ('jobdsl-gradle') {
                     sh script: '''
@@ -38,7 +38,6 @@ try {
                     '''.stripIndent().trim()
                 }
             }
-            
             stage ( 'Build Docker' ) {
                 dir ('dockerizeit') {
                     sh script: '''
@@ -51,7 +50,6 @@ try {
                     '''.stripIndent().trim()
                 }
             }
-    
             stage ( 'Generate compose yml' ) {
                 dir ('dockerizeit') {
                     sh script: '''

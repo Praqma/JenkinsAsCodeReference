@@ -1,3 +1,5 @@
+import job.Helpers
+
 import javaposse.jobdsl.dsl.DslFactory
 import javaposse.jobdsl.dsl.Job
 
@@ -17,29 +19,33 @@ dslFactory.multibranchPipelineJob( "jenkins_as_a_code-review-pipeline" ) {
             if ( defaultBranch != "" ) {
                 excludes ( defaultBranch )
             }
+            // Parse out repository and organisation from default_repo
             repoTokens = defaultRepo.split(':')[-1].split('/')
             if (repoTokens.length > 2) {
-                repoName = '/'.join(repoTokens[1..-1]) 
-                repoOwner( ${repoTokens[0]}
+                repoName = '/'.join(repoTokens[1..-1])
+                repoOwner( ${repoTokens[0]} )
             } else if (repoTokens.length == 2 ) {
                 repoName = repoTokens[1]
-                repoOwner( ${repoTokens[0]}
+                repoOwner( ${repoTokens[0]} )
             } else {
                 repoName = repoTokens[0]
             }
             repository ( repoName )
+
             scanCredentialsId ( "" )
         }
+    }
 
-        triggers {
-            periodic ( 240 )
-        }
+    triggers {
+        // Scan MB-pipeline every 4hours.
+        periodic ( 240 )
+    }
 
-     // remove dead branches and logs
-     orphanedItemStrategy {
-         discardOldItems {
+    // remove dead branches and logs
+    orphanedItemStrategy {
+        discardOldItems {
             numToKeep( 0 )
             daysToKeep( 1 )
-         }
-     }
+        }
+    }
 }
