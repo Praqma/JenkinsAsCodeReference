@@ -9,6 +9,8 @@ ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
 ENV http_proxy ${http_proxy:-}
 ENV https_proxy ${https_proxy:-}
 ENV no_proxy ${no_proxy:-}
+ARG JAVA_PROXY
+ENV JAVA_PROXY ${JAVA_PROXY}
 
 # install docker
 
