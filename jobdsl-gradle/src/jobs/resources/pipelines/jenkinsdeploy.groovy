@@ -27,8 +27,8 @@ node(env.utility_slave) {
 
         def nonProxy = ""
         if ( env.no_proxy ) {
-            def hostList = env.no_proxy.replace(',','|')
-            nonProxy = "-Dhttp.nonProxyHosts=${hostList} -Dhttps.nonProxyHosts=${hostList}".replace('|.','|*.')
+            def hostList = env.no_proxy.replace(',','\\|')
+            nonProxy = "-Dhttp.nonProxyHosts=${hostList} -Dhttps.nonProxyHosts=${hostList}".replace('\\|.','\\|*.')
         }
 
         sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} ${nonProxy} buildXml"
