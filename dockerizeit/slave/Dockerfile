@@ -1,4 +1,4 @@
-FROM java:openjdk-8u77-alpine
+FROM openjdk:8u151-jdk-alpine
 
 ENV JENKINS_SWARM_VERSION 2.0
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
@@ -16,7 +16,7 @@ ENV JAVA_PROXY ${JAVA_PROXY}
 
 RUN apk update && apk --update add tar && apk add curl && curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.05.0-ce.tgz && tar --strip-components=1 -xvzf docker-17.05.0-ce.tgz -C /usr/local/bin && rm -rf docker-*
 # install git, curl, ssh, bash
-RUN apk update && apk add git curl openssh bash
+RUN apk update && apk add git curl openssh bash tini
 
 # install docker compose and other python deps
 RUN apk update && apk add py-pip perl && pip install docker-compose==1.13.0 docopt==0.6.2 pyyaml==3.11
@@ -30,4 +30,5 @@ RUN curl -s https://raw.githubusercontent.com/Praqma/docker-clean/master/docker-
 COPY start.sh /usr/local/bin/start.sh
 RUN chmod 755 /usr/local/bin/start.sh
 
-ENTRYPOINT ["/usr/local/bin/start.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/start.sh"]
+
