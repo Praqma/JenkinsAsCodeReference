@@ -25,15 +25,21 @@ node(env.utility_slave) {
             proxyHTTPS = "-Dhttps.proxyHost=${host} -Dhttps.proxyPort=${port}"
         }
 
-        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} buildXml"
-        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} test"
+        def nonProxy = ""
+        if ( env.no_proxy ) {
+            def hostList = env.no_proxy.replace(',','\\|')
+            nonProxy = "-Dhttp.nonProxyHosts=${hostList} -Dhttps.nonProxyHosts=${hostList}".replace('\\|.','\\|*.')
+        }
+
+        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} ${nonProxy} buildXml"
+        sh "cd jobdsl-gradle && ./gradlew ${proxyHTTP} ${proxyHTTPS} ${nonProxy} test"
     }
 
    stage('Build master Docker image') {
        // docker pipeline plugin build command does not implement to take arguments yet
        sh 'cd dockerizeit/master && docker build --build-arg master_image_version=${master_image_name}:$(git describe --tags) --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy --build-arg JAVA_PROXY -t ${master_image_name}:$(git describe --tags) .'
    }
-   
+
     // This have to be outside of stages to be available for other stages
     def masterImg = docker.image('${master_image_name}:$(git describe --tags) ')
 

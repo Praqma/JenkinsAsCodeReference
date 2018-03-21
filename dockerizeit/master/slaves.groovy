@@ -49,7 +49,7 @@ properties.slaves.each {
 
   // Add env variables
   def entryList = []
-  for (var in it.value.env) {
+  it.value.env.each { name, var ->
     entryList.add(new EnvironmentVariablesNodeProperty.Entry(var.key, var.value))
   }
   def evnp = new EnvironmentVariablesNodeProperty(entryList)
