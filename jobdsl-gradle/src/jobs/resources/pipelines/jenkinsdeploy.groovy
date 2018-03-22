@@ -49,7 +49,7 @@ node(env.utility_slave) {
     }
 
     stage('Build slave Docker image') {
-       sh 'cd dockerizeit/slave && docker build --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t ${slave_image_name}:$(git describe --tags) .'
+       sh 'cd dockerizeit/slave && docker build --build-arg JAVA_PROXY --build-arg http_proxy --build-arg https_proxy --build-arg no_proxy -t ${slave_image_name}:$(git describe --tags) .'
     }
 
     // This have to be outside of stages to be available for other stages
