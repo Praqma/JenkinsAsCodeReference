@@ -312,14 +312,14 @@ The script will read http_proxy, https_proxy, no_proxy, JAVA_PROXY environment v
 
 ### Security configuration
 
-Security configuration stored in the separate file - [security.properties](security.properies)
+Security configuration stored in the separate file - [security.properties](security.properties)
 
 #### Script security for JobDSL
 
-JobDSL plugin supports script secutiry starting from 1.60. You can disable sandbox mode by using config below
+JobDSL plugin supports script security starting from 1.60. You can disable sandbox mode by using config below
 
 ```
-scriptSecutiry {
+scriptSecurity {
   jobDSL = false
 }
 ```
@@ -328,6 +328,7 @@ scriptSecutiry {
 
 LDAP configuration example. Fields name match [LDAPSecurityRealm](https://github.com/jenkinsci/ldap-plugin/blob/0da2fef8feb9e480e303a7dbd03241f880c82235/src/main/java/hudson/security/LDAPSecurityRealm.java) constructor.
 
+```
 ldap {
   enabled = true
   server = "ldap://1.2.3.4"
@@ -339,6 +340,7 @@ ldap {
   managerPassword = "password"
   inhibitInferRootDN = false
 }
+```
 
 #### AD
 
