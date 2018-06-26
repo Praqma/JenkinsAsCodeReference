@@ -47,6 +47,7 @@ services:
 
   registry:
     image: registry:2.4.0
+    restart: unless-stopped
     ports:
       - 5000:5000
     volumes:
@@ -55,6 +56,7 @@ services:
 
   registry-web:
     image: konradkleine/docker-registry-frontend:v2
+    restart: unless-stopped
     ports:
       - 8081:80
     environment:
